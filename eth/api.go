@@ -62,9 +62,9 @@ func (api *EthereumAPI) Coinbase() (common.Address, error) {
 }
 
 // Hashrate returns the POW hashrate.
-func (api *EthereumAPI) Hashrate() hexutil.Uint64 {
-	return hexutil.Uint64(api.e.Miner().Hashrate())
-}
+// func (api *EthereumAPI) Hashrate() hexutil.Uint64 {
+// 	return hexutil.Uint64(api.e.Miner().Hashrate())
+// }
 
 // Mining returns an indication if this node is currently mining.
 func (api *EthereumAPI) Mining() bool {
@@ -100,12 +100,12 @@ func (api *MinerAPI) Stop() {
 }
 
 // SetExtra sets the extra data string that is included when this miner mines a block.
-func (api *MinerAPI) SetExtra(extra string) (bool, error) {
-	if err := api.e.Miner().SetExtra([]byte(extra)); err != nil {
-		return false, err
-	}
-	return true, nil
-}
+// func (api *MinerAPI) SetExtra(extra string) (bool, error) {
+// 	if err := api.e.Miner().SetExtra([]byte(extra)); err != nil {
+// 		return false, err
+// 	}
+// 	return true, nil
+// }
 
 // SetGasPrice sets the minimum accepted gas price for the miner.
 func (api *MinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
@@ -118,10 +118,10 @@ func (api *MinerAPI) SetGasPrice(gasPrice hexutil.Big) bool {
 }
 
 // SetGasLimit sets the gaslimit to target towards during mining.
-func (api *MinerAPI) SetGasLimit(gasLimit hexutil.Uint64) bool {
-	api.e.Miner().SetGasCeil(uint64(gasLimit))
-	return true
-}
+// func (api *MinerAPI) SetGasLimit(gasLimit hexutil.Uint64) bool {
+// 	api.e.Miner().SetGasCeil(uint64(gasLimit))
+// 	return true
+// }
 
 // SetEtherbase sets the etherbase of the miner.
 func (api *MinerAPI) SetEtherbase(etherbase common.Address) bool {
@@ -130,9 +130,9 @@ func (api *MinerAPI) SetEtherbase(etherbase common.Address) bool {
 }
 
 // SetRecommitInterval updates the interval for miner sealing work recommitting.
-func (api *MinerAPI) SetRecommitInterval(interval int) {
-	api.e.Miner().SetRecommitInterval(time.Duration(interval) * time.Millisecond)
-}
+// func (api *MinerAPI) SetRecommitInterval(interval int) {
+// 	api.e.Miner().SetRecommitInterval(time.Duration(interval) * time.Millisecond)
+// }
 
 // AdminAPI is the collection of Ethereum full node related APIs for node
 // administration.
@@ -255,41 +255,41 @@ func NewDebugAPI(eth *Ethereum) *DebugAPI {
 }
 
 // DumpBlock retrieves the entire state of the database at a given block.
-func (api *DebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
-	opts := &state.DumpConfig{
-		OnlyWithAddresses: true,
-		Max:               AccountRangeMaxResults, // Sanity limit over RPC
-	}
-	if blockNr == rpc.PendingBlockNumber {
-		// If we're dumping the pending state, we need to request
-		// both the pending block as well as the pending state from
-		// the miner and operate on those
-		_, stateDb := api.eth.miner.Pending()
-		return stateDb.RawDump(opts), nil
-	}
-	var header *types.Header
-	if blockNr == rpc.LatestBlockNumber {
-		header = api.eth.blockchain.CurrentBlock()
-	} else if blockNr == rpc.FinalizedBlockNumber {
-		header = api.eth.blockchain.CurrentFinalBlock()
-	} else if blockNr == rpc.SafeBlockNumber {
-		header = api.eth.blockchain.CurrentSafeBlock()
-	} else {
-		block := api.eth.blockchain.GetBlockByNumber(uint64(blockNr))
-		if block == nil {
-			return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
-		}
-		header = block.Header()
-	}
-	if header == nil {
-		return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
-	}
-	stateDb, err := api.eth.BlockChain().StateAt(header.Root)
-	if err != nil {
-		return state.Dump{}, err
-	}
-	return stateDb.RawDump(opts), nil
-}
+// func (api *DebugAPI) DumpBlock(blockNr rpc.BlockNumber) (state.Dump, error) {
+// 	opts := &state.DumpConfig{
+// 		OnlyWithAddresses: true,
+// 		Max:               AccountRangeMaxResults, // Sanity limit over RPC
+// 	}
+// 	if blockNr == rpc.PendingBlockNumber {
+// 		// If we're dumping the pending state, we need to request
+// 		// both the pending block as well as the pending state from
+// 		// the miner and operate on those
+// 		_, stateDb := api.eth.miner.Pending()
+// 		return stateDb.RawDump(opts), nil
+// 	}
+// 	var header *types.Header
+// 	if blockNr == rpc.LatestBlockNumber {
+// 		header = api.eth.blockchain.CurrentBlock()
+// 	} else if blockNr == rpc.FinalizedBlockNumber {
+// 		header = api.eth.blockchain.CurrentFinalBlock()
+// 	} else if blockNr == rpc.SafeBlockNumber {
+// 		header = api.eth.blockchain.CurrentSafeBlock()
+// 	} else {
+// 		block := api.eth.blockchain.GetBlockByNumber(uint64(blockNr))
+// 		if block == nil {
+// 			return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
+// 		}
+// 		header = block.Header()
+// 	}
+// 	if header == nil {
+// 		return state.Dump{}, fmt.Errorf("block #%d not found", blockNr)
+// 	}
+// 	stateDb, err := api.eth.BlockChain().StateAt(header.Root)
+// 	if err != nil {
+// 		return state.Dump{}, err
+// 	}
+// 	return stateDb.RawDump(opts), nil
+// }
 
 // Preimage is a debug API function that returns the preimage for a sha3 hash, if known.
 func (api *DebugAPI) Preimage(ctx context.Context, hash common.Hash) (hexutil.Bytes, error) {
@@ -340,64 +340,64 @@ func (api *DebugAPI) GetBadBlocks(ctx context.Context) ([]*BadBlockArgs, error) 
 const AccountRangeMaxResults = 256
 
 // AccountRange enumerates all accounts in the given block and start point in paging request
-func (api *DebugAPI) AccountRange(blockNrOrHash rpc.BlockNumberOrHash, start hexutil.Bytes, maxResults int, nocode, nostorage, incompletes bool) (state.IteratorDump, error) {
-	var stateDb *state.StateDB
-	var err error
+// func (api *DebugAPI) AccountRange(blockNrOrHash rpc.BlockNumberOrHash, start hexutil.Bytes, maxResults int, nocode, nostorage, incompletes bool) (state.IteratorDump, error) {
+// 	var stateDb *state.StateDB
+// 	var err error
 
-	if number, ok := blockNrOrHash.Number(); ok {
-		if number == rpc.PendingBlockNumber {
-			// If we're dumping the pending state, we need to request
-			// both the pending block as well as the pending state from
-			// the miner and operate on those
-			_, stateDb = api.eth.miner.Pending()
-		} else {
-			var header *types.Header
-			if number == rpc.LatestBlockNumber {
-				header = api.eth.blockchain.CurrentBlock()
-			} else if number == rpc.FinalizedBlockNumber {
-				header = api.eth.blockchain.CurrentFinalBlock()
-			} else if number == rpc.SafeBlockNumber {
-				header = api.eth.blockchain.CurrentSafeBlock()
-			} else {
-				block := api.eth.blockchain.GetBlockByNumber(uint64(number))
-				if block == nil {
-					return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
-				}
-				header = block.Header()
-			}
-			if header == nil {
-				return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
-			}
-			stateDb, err = api.eth.BlockChain().StateAt(header.Root)
-			if err != nil {
-				return state.IteratorDump{}, err
-			}
-		}
-	} else if hash, ok := blockNrOrHash.Hash(); ok {
-		block := api.eth.blockchain.GetBlockByHash(hash)
-		if block == nil {
-			return state.IteratorDump{}, fmt.Errorf("block %s not found", hash.Hex())
-		}
-		stateDb, err = api.eth.BlockChain().StateAt(block.Root())
-		if err != nil {
-			return state.IteratorDump{}, err
-		}
-	} else {
-		return state.IteratorDump{}, errors.New("either block number or block hash must be specified")
-	}
+// 	if number, ok := blockNrOrHash.Number(); ok {
+// 		if number == rpc.PendingBlockNumber {
+// 			// If we're dumping the pending state, we need to request
+// 			// both the pending block as well as the pending state from
+// 			// the miner and operate on those
+// 			_, stateDb = api.eth.miner.Pending()
+// 		} else {
+// 			var header *types.Header
+// 			if number == rpc.LatestBlockNumber {
+// 				header = api.eth.blockchain.CurrentBlock()
+// 			} else if number == rpc.FinalizedBlockNumber {
+// 				header = api.eth.blockchain.CurrentFinalBlock()
+// 			} else if number == rpc.SafeBlockNumber {
+// 				header = api.eth.blockchain.CurrentSafeBlock()
+// 			} else {
+// 				block := api.eth.blockchain.GetBlockByNumber(uint64(number))
+// 				if block == nil {
+// 					return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
+// 				}
+// 				header = block.Header()
+// 			}
+// 			if header == nil {
+// 				return state.IteratorDump{}, fmt.Errorf("block #%d not found", number)
+// 			}
+// 			stateDb, err = api.eth.BlockChain().StateAt(header.Root)
+// 			if err != nil {
+// 				return state.IteratorDump{}, err
+// 			}
+// 		}
+// 	} else if hash, ok := blockNrOrHash.Hash(); ok {
+// 		block := api.eth.blockchain.GetBlockByHash(hash)
+// 		if block == nil {
+// 			return state.IteratorDump{}, fmt.Errorf("block %s not found", hash.Hex())
+// 		}
+// 		stateDb, err = api.eth.BlockChain().StateAt(block.Root())
+// 		if err != nil {
+// 			return state.IteratorDump{}, err
+// 		}
+// 	} else {
+// 		return state.IteratorDump{}, errors.New("either block number or block hash must be specified")
+// 	}
 
-	opts := &state.DumpConfig{
-		SkipCode:          nocode,
-		SkipStorage:       nostorage,
-		OnlyWithAddresses: !incompletes,
-		Start:             start,
-		Max:               uint64(maxResults),
-	}
-	if maxResults > AccountRangeMaxResults || maxResults <= 0 {
-		opts.Max = AccountRangeMaxResults
-	}
-	return stateDb.IteratorDump(opts), nil
-}
+// 	opts := &state.DumpConfig{
+// 		SkipCode:          nocode,
+// 		SkipStorage:       nostorage,
+// 		OnlyWithAddresses: !incompletes,
+// 		Start:             start,
+// 		Max:               uint64(maxResults),
+// 	}
+// 	if maxResults > AccountRangeMaxResults || maxResults <= 0 {
+// 		opts.Max = AccountRangeMaxResults
+// 	}
+// 	return stateDb.IteratorDump(opts), nil
+// }
 
 // StorageRangeResult is the result of a debug_storageRangeAt API call.
 type StorageRangeResult struct {

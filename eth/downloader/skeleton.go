@@ -20,14 +20,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math/rand"
-	"sort"
+	// "math/rand"
+	// "sort"
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/core/rawdb"
 	"github.com/sachindigi195/go-eth-evm/core/types"
-	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
+	// "github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/ethdb"
 	"github.com/sachindigi195/go-eth-evm/log"
 )
@@ -412,7 +412,7 @@ func (s *skeleton) sync(head *types.Header) (*types.Header, error) {
 	for {
 		// Something happened, try to assign new tasks to any idle peers
 		if !linked {
-			s.assignTasks(responses, requestFails, cancel)
+			// s.assignTasks(responses, requestFails, cancel)
 		}
 		// Wait for something to happen
 		select {
@@ -652,189 +652,189 @@ func (s *skeleton) processNewHead(head *types.Header, final *types.Header, force
 }
 
 // assignTasks attempts to match idle peers to pending header retrievals.
-func (s *skeleton) assignTasks(success chan *headerResponse, fail chan *headerRequest, cancel chan struct{}) {
-	// Sort the peers by download capacity to use faster ones if many available
-	idlers := &peerCapacitySort{
-		peers: make([]*peerConnection, 0, len(s.idles)),
-		caps:  make([]int, 0, len(s.idles)),
-	}
-	targetTTL := s.peers.rates.TargetTimeout()
-	for _, peer := range s.idles {
-		idlers.peers = append(idlers.peers, peer)
-		idlers.caps = append(idlers.caps, s.peers.rates.Capacity(peer.id, eth.BlockHeadersMsg, targetTTL))
-	}
-	if len(idlers.peers) == 0 {
-		return
-	}
-	sort.Sort(idlers)
+// func (s *skeleton) assignTasks(success chan *headerResponse, fail chan *headerRequest, cancel chan struct{}) {
+// 	// Sort the peers by download capacity to use faster ones if many available
+// 	idlers := &peerCapacitySort{
+// 		peers: make([]*peerConnection, 0, len(s.idles)),
+// 		caps:  make([]int, 0, len(s.idles)),
+// 	}
+// 	targetTTL := s.peers.rates.TargetTimeout()
+// 	for _, peer := range s.idles {
+// 		idlers.peers = append(idlers.peers, peer)
+// 		idlers.caps = append(idlers.caps, s.peers.rates.Capacity(peer.id, eth.BlockHeadersMsg, targetTTL))
+// 	}
+// 	if len(idlers.peers) == 0 {
+// 		return
+// 	}
+// 	sort.Sort(idlers)
 
-	// Find header regions not yet downloading and fill them
-	for task, owner := range s.scratchOwners {
-		// If we're out of idle peers, stop assigning tasks
-		if len(idlers.peers) == 0 {
-			return
-		}
-		// Skip any tasks already filling
-		if owner != "" {
-			continue
-		}
-		// If we've reached the genesis, stop assigning tasks
-		if uint64(task*requestHeaders) >= s.scratchHead {
-			return
-		}
-		// Found a task and have peers available, assign it
-		idle := idlers.peers[0]
+// 	// Find header regions not yet downloading and fill them
+// 	for task, owner := range s.scratchOwners {
+// 		// If we're out of idle peers, stop assigning tasks
+// 		if len(idlers.peers) == 0 {
+// 			return
+// 		}
+// 		// Skip any tasks already filling
+// 		if owner != "" {
+// 			continue
+// 		}
+// 		// If we've reached the genesis, stop assigning tasks
+// 		if uint64(task*requestHeaders) >= s.scratchHead {
+// 			return
+// 		}
+// 		// Found a task and have peers available, assign it
+// 		idle := idlers.peers[0]
 
-		idlers.peers = idlers.peers[1:]
-		idlers.caps = idlers.caps[1:]
+// 		idlers.peers = idlers.peers[1:]
+// 		idlers.caps = idlers.caps[1:]
 
-		// Matched a pending task to an idle peer, allocate a unique request id
-		var reqid uint64
-		for {
-			reqid = uint64(rand.Int63())
-			if reqid == 0 {
-				continue
-			}
-			if _, ok := s.requests[reqid]; ok {
-				continue
-			}
-			break
-		}
-		// Generate the network query and send it to the peer
-		req := &headerRequest{
-			peer:    idle.id,
-			id:      reqid,
-			deliver: success,
-			revert:  fail,
-			cancel:  cancel,
-			stale:   make(chan struct{}),
-			head:    s.scratchHead - uint64(task*requestHeaders),
-		}
-		s.requests[reqid] = req
-		delete(s.idles, idle.id)
+// 		// Matched a pending task to an idle peer, allocate a unique request id
+// 		var reqid uint64
+// 		for {
+// 			reqid = uint64(rand.Int63())
+// 			if reqid == 0 {
+// 				continue
+// 			}
+// 			if _, ok := s.requests[reqid]; ok {
+// 				continue
+// 			}
+// 			break
+// 		}
+// 		// Generate the network query and send it to the peer
+// 		req := &headerRequest{
+// 			peer:    idle.id,
+// 			id:      reqid,
+// 			deliver: success,
+// 			revert:  fail,
+// 			cancel:  cancel,
+// 			stale:   make(chan struct{}),
+// 			head:    s.scratchHead - uint64(task*requestHeaders),
+// 		}
+// 		s.requests[reqid] = req
+// 		delete(s.idles, idle.id)
 
-		// Generate the network query and send it to the peer
-		go s.executeTask(idle, req)
+// 		// Generate the network query and send it to the peer
+// 		go s.executeTask(idle, req)
 
-		// Inject the request into the task to block further assignments
-		s.scratchOwners[task] = idle.id
-	}
-}
+// 		// Inject the request into the task to block further assignments
+// 		s.scratchOwners[task] = idle.id
+// 	}
+// }
 
 // executeTask executes a single fetch request, blocking until either a result
 // arrives or a timeouts / cancellation is triggered. The method should be run
 // on its own goroutine and will deliver on the requested channels.
-func (s *skeleton) executeTask(peer *peerConnection, req *headerRequest) {
-	start := time.Now()
-	resCh := make(chan *eth.Response)
+// func (s *skeleton) executeTask(peer *peerConnection, req *headerRequest) {
+// 	start := time.Now()
+// 	resCh := make(chan *eth.Response)
 
-	// Figure out how many headers to fetch. Usually this will be a full batch,
-	// but for the very tail of the chain, trim the request to the number left.
-	// Since nodes may or may not return the genesis header for a batch request,
-	// don't even request it. The parent hash of block #1 is enough to link.
-	requestCount := requestHeaders
-	if req.head < requestHeaders {
-		requestCount = int(req.head)
-	}
-	peer.log.Trace("Fetching skeleton headers", "from", req.head, "count", requestCount)
-	netreq, err := peer.peer.RequestHeadersByNumber(req.head, requestCount, 0, true, resCh)
-	if err != nil {
-		peer.log.Trace("Failed to request headers", "err", err)
-		s.scheduleRevertRequest(req)
-		return
-	}
-	defer netreq.Close()
+// 	// Figure out how many headers to fetch. Usually this will be a full batch,
+// 	// but for the very tail of the chain, trim the request to the number left.
+// 	// Since nodes may or may not return the genesis header for a batch request,
+// 	// don't even request it. The parent hash of block #1 is enough to link.
+// 	requestCount := requestHeaders
+// 	if req.head < requestHeaders {
+// 		requestCount = int(req.head)
+// 	}
+// 	peer.log.Trace("Fetching skeleton headers", "from", req.head, "count", requestCount)
+// 	netreq, err := peer.peer.RequestHeadersByNumber(req.head, requestCount, 0, true, resCh)
+// 	if err != nil {
+// 		peer.log.Trace("Failed to request headers", "err", err)
+// 		s.scheduleRevertRequest(req)
+// 		return
+// 	}
+// 	defer netreq.Close()
 
-	// Wait until the response arrives, the request is cancelled or times out
-	ttl := s.peers.rates.TargetTimeout()
+// 	// Wait until the response arrives, the request is cancelled or times out
+// 	ttl := s.peers.rates.TargetTimeout()
 
-	timeoutTimer := time.NewTimer(ttl)
-	defer timeoutTimer.Stop()
+// 	timeoutTimer := time.NewTimer(ttl)
+// 	defer timeoutTimer.Stop()
 
-	select {
-	case <-req.cancel:
-		peer.log.Debug("Header request cancelled")
-		s.scheduleRevertRequest(req)
+// 	select {
+// 	case <-req.cancel:
+// 		peer.log.Debug("Header request cancelled")
+// 		s.scheduleRevertRequest(req)
 
-	case <-timeoutTimer.C:
-		// Header retrieval timed out, update the metrics
-		peer.log.Warn("Header request timed out, dropping peer", "elapsed", ttl)
-		headerTimeoutMeter.Mark(1)
-		s.peers.rates.Update(peer.id, eth.BlockHeadersMsg, 0, 0)
-		s.scheduleRevertRequest(req)
+// 	case <-timeoutTimer.C:
+// 		// Header retrieval timed out, update the metrics
+// 		peer.log.Warn("Header request timed out, dropping peer", "elapsed", ttl)
+// 		headerTimeoutMeter.Mark(1)
+// 		s.peers.rates.Update(peer.id, eth.BlockHeadersMsg, 0, 0)
+// 		s.scheduleRevertRequest(req)
 
-		// At this point we either need to drop the offending peer, or we need a
-		// mechanism to allow waiting for the response and not cancel it. For now
-		// lets go with dropping since the header sizes are deterministic and the
-		// beacon sync runs exclusive (downloader is idle) so there should be no
-		// other load to make timeouts probable. If we notice that timeouts happen
-		// more often than we'd like, we can introduce a tracker for the requests
-		// gone stale and monitor them. However, in that case too, we need a way
-		// to protect against malicious peers never responding, so it would need
-		// a second, hard-timeout mechanism.
-		s.drop(peer.id)
+// 		// At this point we either need to drop the offending peer, or we need a
+// 		// mechanism to allow waiting for the response and not cancel it. For now
+// 		// lets go with dropping since the header sizes are deterministic and the
+// 		// beacon sync runs exclusive (downloader is idle) so there should be no
+// 		// other load to make timeouts probable. If we notice that timeouts happen
+// 		// more often than we'd like, we can introduce a tracker for the requests
+// 		// gone stale and monitor them. However, in that case too, we need a way
+// 		// to protect against malicious peers never responding, so it would need
+// 		// a second, hard-timeout mechanism.
+// 		s.drop(peer.id)
 
-	case res := <-resCh:
-		// Headers successfully retrieved, update the metrics
-		headers := *res.Res.(*eth.BlockHeadersPacket)
+// 	case res := <-resCh:
+// 		// Headers successfully retrieved, update the metrics
+// 		headers := *res.Res.(*eth.BlockHeadersPacket)
 
-		headerReqTimer.Update(time.Since(start))
-		s.peers.rates.Update(peer.id, eth.BlockHeadersMsg, res.Time, len(headers))
+// 		headerReqTimer.Update(time.Since(start))
+// 		s.peers.rates.Update(peer.id, eth.BlockHeadersMsg, res.Time, len(headers))
 
-		// Cross validate the headers with the requests
-		switch {
-		case len(headers) == 0:
-			// No headers were delivered, reject the response and reschedule
-			peer.log.Debug("No headers delivered")
-			res.Done <- errors.New("no headers delivered")
-			s.scheduleRevertRequest(req)
+// 		// Cross validate the headers with the requests
+// 		switch {
+// 		case len(headers) == 0:
+// 			// No headers were delivered, reject the response and reschedule
+// 			peer.log.Debug("No headers delivered")
+// 			res.Done <- errors.New("no headers delivered")
+// 			s.scheduleRevertRequest(req)
 
-		case headers[0].Number.Uint64() != req.head:
-			// Header batch anchored at non-requested number
-			peer.log.Debug("Invalid header response head", "have", headers[0].Number, "want", req.head)
-			res.Done <- errors.New("invalid header batch anchor")
-			s.scheduleRevertRequest(req)
+// 		case headers[0].Number.Uint64() != req.head:
+// 			// Header batch anchored at non-requested number
+// 			peer.log.Debug("Invalid header response head", "have", headers[0].Number, "want", req.head)
+// 			res.Done <- errors.New("invalid header batch anchor")
+// 			s.scheduleRevertRequest(req)
 
-		case req.head >= requestHeaders && len(headers) != requestHeaders:
-			// Invalid number of non-genesis headers delivered, reject the response and reschedule
-			peer.log.Debug("Invalid non-genesis header count", "have", len(headers), "want", requestHeaders)
-			res.Done <- errors.New("not enough non-genesis headers delivered")
-			s.scheduleRevertRequest(req)
+// 		case req.head >= requestHeaders && len(headers) != requestHeaders:
+// 			// Invalid number of non-genesis headers delivered, reject the response and reschedule
+// 			peer.log.Debug("Invalid non-genesis header count", "have", len(headers), "want", requestHeaders)
+// 			res.Done <- errors.New("not enough non-genesis headers delivered")
+// 			s.scheduleRevertRequest(req)
 
-		case req.head < requestHeaders && uint64(len(headers)) != req.head:
-			// Invalid number of genesis headers delivered, reject the response and reschedule
-			peer.log.Debug("Invalid genesis header count", "have", len(headers), "want", headers[0].Number.Uint64())
-			res.Done <- errors.New("not enough genesis headers delivered")
-			s.scheduleRevertRequest(req)
+// 		case req.head < requestHeaders && uint64(len(headers)) != req.head:
+// 			// Invalid number of genesis headers delivered, reject the response and reschedule
+// 			peer.log.Debug("Invalid genesis header count", "have", len(headers), "want", headers[0].Number.Uint64())
+// 			res.Done <- errors.New("not enough genesis headers delivered")
+// 			s.scheduleRevertRequest(req)
 
-		default:
-			// Packet seems structurally valid, check hash progression and if it
-			// is correct too, deliver for storage
-			for i := 0; i < len(headers)-1; i++ {
-				if headers[i].ParentHash != headers[i+1].Hash() {
-					peer.log.Debug("Invalid hash progression", "index", i, "wantparenthash", headers[i].ParentHash, "haveparenthash", headers[i+1].Hash())
-					res.Done <- errors.New("invalid hash progression")
-					s.scheduleRevertRequest(req)
-					return
-				}
-			}
-			// Hash chain is valid. The delivery might still be junk as we're
-			// downloading batches concurrently (so no way to link the headers
-			// until gaps are filled); in that case, we'll nuke the peer when
-			// we detect the fault.
-			res.Done <- nil
+// 		default:
+// 			// Packet seems structurally valid, check hash progression and if it
+// 			// is correct too, deliver for storage
+// 			for i := 0; i < len(headers)-1; i++ {
+// 				if headers[i].ParentHash != headers[i+1].Hash() {
+// 					peer.log.Debug("Invalid hash progression", "index", i, "wantparenthash", headers[i].ParentHash, "haveparenthash", headers[i+1].Hash())
+// 					res.Done <- errors.New("invalid hash progression")
+// 					s.scheduleRevertRequest(req)
+// 					return
+// 				}
+// 			}
+// 			// Hash chain is valid. The delivery might still be junk as we're
+// 			// downloading batches concurrently (so no way to link the headers
+// 			// until gaps are filled); in that case, we'll nuke the peer when
+// 			// we detect the fault.
+// 			res.Done <- nil
 
-			select {
-			case req.deliver <- &headerResponse{
-				peer:    peer,
-				reqid:   req.id,
-				headers: headers,
-			}:
-			case <-req.cancel:
-			}
-		}
-	}
-}
+// 			select {
+// 			case req.deliver <- &headerResponse{
+// 				peer:    peer,
+// 				reqid:   req.id,
+// 				headers: headers,
+// 			}:
+// 			case <-req.cancel:
+// 			}
+// 		}
+// 	}
+// }
 
 // revertRequests locates all the currently pending requests from a particular
 // peer and reverts them, rescheduling for others to fulfill.

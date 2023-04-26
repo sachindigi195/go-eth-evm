@@ -19,7 +19,7 @@ package eth
 import (
 	"github.com/sachindigi195/go-eth-evm/core"
 	"github.com/sachindigi195/go-eth-evm/core/forkid"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 )
 
@@ -38,24 +38,24 @@ func (e enrEntry) ENRKey() string {
 
 // StartENRUpdater starts the `eth` ENR updater loop, which listens for chain
 // head events and updates the requested node record whenever a fork is passed.
-func StartENRUpdater(chain *core.BlockChain, ln *enode.LocalNode) {
-	var newHead = make(chan core.ChainHeadEvent, 10)
-	sub := chain.SubscribeChainHeadEvent(newHead)
+// func StartENRUpdater(chain *core.BlockChain, ln *enode.LocalNode) {
+// 	var newHead = make(chan core.ChainHeadEvent, 10)
+// 	sub := chain.SubscribeChainHeadEvent(newHead)
 
-	go func() {
-		defer sub.Unsubscribe()
-		for {
-			select {
-			case <-newHead:
-				ln.Set(currentENREntry(chain))
-			case <-sub.Err():
-				// Would be nice to sync with Stop, but there is no
-				// good way to do that.
-				return
-			}
-		}
-	}()
-}
+// 	go func() {
+// 		defer sub.Unsubscribe()
+// 		for {
+// 			select {
+// 			case <-newHead:
+// 				ln.Set(currentENREntry(chain))
+// 			case <-sub.Err():
+// 				// Would be nice to sync with Stop, but there is no
+// 				// good way to do that.
+// 				return
+// 			}
+// 		}
+// 	}()
+// }
 
 // currentENREntry constructs an `eth` ENR entry based on the current state of the chain.
 func currentENREntry(chain *core.BlockChain) *enrEntry {

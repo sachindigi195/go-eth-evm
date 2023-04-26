@@ -38,9 +38,9 @@ import (
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/ethdb"
 	"github.com/sachindigi195/go-eth-evm/event"
-	"github.com/sachindigi195/go-eth-evm/light"
+	// "github.com/sachindigi195/go-eth-evm/light"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/msgrate"
+	// "github.com/sachindigi195/go-eth-evm/p2p/msgrate"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	"github.com/sachindigi195/go-eth-evm/trie"
 	"golang.org/x/crypto/sha3"
@@ -421,7 +421,7 @@ type Syncer struct {
 	peers    map[string]SyncPeer // Currently active peers to download from
 	peerJoin *event.Feed         // Event feed to react to peers joining
 	peerDrop *event.Feed         // Event feed to react to peers dropping
-	rates    *msgrate.Trackers   // Message throughput rates for peers
+	// rates    *msgrate.Trackers   // Message throughput rates for peers
 
 	// Request tracking during syncing phase
 	statelessPeers map[string]struct{} // Peers that failed to deliver state data
@@ -486,7 +486,7 @@ func NewSyncer(db ethdb.KeyValueStore, scheme string) *Syncer {
 		peers:    make(map[string]SyncPeer),
 		peerJoin: new(event.Feed),
 		peerDrop: new(event.Feed),
-		rates:    msgrate.NewTrackers(log.New("proto", "snap")),
+		// rates:    msgrate.NewTrackers(log.New("proto", "snap")),
 		update:   make(chan struct{}, 1),
 
 		accountIdlers:  make(map[string]struct{}),
@@ -522,7 +522,7 @@ func (s *Syncer) Register(peer SyncPeer) error {
 		return errors.New("already registered")
 	}
 	s.peers[id] = peer
-	s.rates.Track(id, msgrate.NewTracker(s.rates.MeanCapacities(), s.rates.MedianRoundTrip()))
+	// s.rates.Track(id, msgrate.NewTracker(s.rates.MeanCapacities(), s.rates.MedianRoundTrip()))
 
 	// Mark the peer as idle, even if no sync is running
 	s.accountIdlers[id] = struct{}{}
@@ -548,7 +548,7 @@ func (s *Syncer) Unregister(id string) error {
 		return errors.New("not registered")
 	}
 	delete(s.peers, id)
-	s.rates.Untrack(id)
+	// s.rates.Untrack(id)
 
 	// Remove status markers, even if no sync is running
 	delete(s.statelessPeers, id)
@@ -933,14 +933,14 @@ func (s *Syncer) assignAccountTasks(success chan *accountResponse, fail chan *ac
 		ids:  make([]string, 0, len(s.accountIdlers)),
 		caps: make([]int, 0, len(s.accountIdlers)),
 	}
-	targetTTL := s.rates.TargetTimeout()
-	for id := range s.accountIdlers {
-		if _, ok := s.statelessPeers[id]; ok {
-			continue
-		}
-		idlers.ids = append(idlers.ids, id)
-		idlers.caps = append(idlers.caps, s.rates.Capacity(id, AccountRangeMsg, targetTTL))
-	}
+	// targetTTL := s.rates.TargetTimeout()
+	// for id := range s.accountIdlers {
+	// 	if _, ok := s.statelessPeers[id]; ok {
+	// 		continue
+	// 	}
+	// 	idlers.ids = append(idlers.ids, id)
+	// 	idlers.caps = append(idlers.caps, s.rates.Capacity(id, AccountRangeMsg, targetTTL))
+	// }
 	if len(idlers.ids) == 0 {
 		return
 	}
@@ -990,11 +990,11 @@ func (s *Syncer) assignAccountTasks(success chan *accountResponse, fail chan *ac
 			limit:   task.Last,
 			task:    task,
 		}
-		req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
-			peer.Log().Debug("Account range request timed out", "reqid", reqid)
-			s.rates.Update(idle, AccountRangeMsg, 0, 0)
-			s.scheduleRevertAccountRequest(req)
-		})
+		// req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
+		// 	peer.Log().Debug("Account range request timed out", "reqid", reqid)
+		// 	s.rates.Update(idle, AccountRangeMsg, 0, 0)
+		// 	s.scheduleRevertAccountRequest(req)
+		// })
 		s.accountReqs[reqid] = req
 		delete(s.accountIdlers, idle)
 
@@ -1030,14 +1030,14 @@ func (s *Syncer) assignBytecodeTasks(success chan *bytecodeResponse, fail chan *
 		ids:  make([]string, 0, len(s.bytecodeIdlers)),
 		caps: make([]int, 0, len(s.bytecodeIdlers)),
 	}
-	targetTTL := s.rates.TargetTimeout()
-	for id := range s.bytecodeIdlers {
-		if _, ok := s.statelessPeers[id]; ok {
-			continue
-		}
-		idlers.ids = append(idlers.ids, id)
-		idlers.caps = append(idlers.caps, s.rates.Capacity(id, ByteCodesMsg, targetTTL))
-	}
+	// targetTTL := s.rates.TargetTimeout()
+	// for id := range s.bytecodeIdlers {
+	// 	if _, ok := s.statelessPeers[id]; ok {
+	// 		continue
+	// 	}
+	// 	idlers.ids = append(idlers.ids, id)
+	// 	idlers.caps = append(idlers.caps, s.rates.Capacity(id, ByteCodesMsg, targetTTL))
+	// }
 	if len(idlers.ids) == 0 {
 		return
 	}
@@ -1101,11 +1101,11 @@ func (s *Syncer) assignBytecodeTasks(success chan *bytecodeResponse, fail chan *
 			hashes:  hashes,
 			task:    task,
 		}
-		req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
-			peer.Log().Debug("Bytecode request timed out", "reqid", reqid)
-			s.rates.Update(idle, ByteCodesMsg, 0, 0)
-			s.scheduleRevertBytecodeRequest(req)
-		})
+		// req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
+		// 	peer.Log().Debug("Bytecode request timed out", "reqid", reqid)
+		// 	s.rates.Update(idle, ByteCodesMsg, 0, 0)
+		// 	s.scheduleRevertBytecodeRequest(req)
+		// })
 		s.bytecodeReqs[reqid] = req
 		delete(s.bytecodeIdlers, idle)
 
@@ -1133,14 +1133,14 @@ func (s *Syncer) assignStorageTasks(success chan *storageResponse, fail chan *st
 		ids:  make([]string, 0, len(s.storageIdlers)),
 		caps: make([]int, 0, len(s.storageIdlers)),
 	}
-	targetTTL := s.rates.TargetTimeout()
-	for id := range s.storageIdlers {
-		if _, ok := s.statelessPeers[id]; ok {
-			continue
-		}
-		idlers.ids = append(idlers.ids, id)
-		idlers.caps = append(idlers.caps, s.rates.Capacity(id, StorageRangesMsg, targetTTL))
-	}
+	// targetTTL := s.rates.TargetTimeout()
+	// for id := range s.storageIdlers {
+	// 	if _, ok := s.statelessPeers[id]; ok {
+	// 		continue
+	// 	}
+	// 	idlers.ids = append(idlers.ids, id)
+	// 	idlers.caps = append(idlers.caps, s.rates.Capacity(id, StorageRangesMsg, targetTTL))
+	// }
 	if len(idlers.ids) == 0 {
 		return
 	}
@@ -1248,11 +1248,11 @@ func (s *Syncer) assignStorageTasks(success chan *storageResponse, fail chan *st
 			req.origin = subtask.Next
 			req.limit = subtask.Last
 		}
-		req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
-			peer.Log().Debug("Storage request timed out", "reqid", reqid)
-			s.rates.Update(idle, StorageRangesMsg, 0, 0)
-			s.scheduleRevertStorageRequest(req)
-		})
+		// req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
+		// 	peer.Log().Debug("Storage request timed out", "reqid", reqid)
+		// 	s.rates.Update(idle, StorageRangesMsg, 0, 0)
+		// 	s.scheduleRevertStorageRequest(req)
+		// })
 		s.storageReqs[reqid] = req
 		delete(s.storageIdlers, idle)
 
@@ -1289,14 +1289,14 @@ func (s *Syncer) assignTrienodeHealTasks(success chan *trienodeHealResponse, fai
 		ids:  make([]string, 0, len(s.trienodeHealIdlers)),
 		caps: make([]int, 0, len(s.trienodeHealIdlers)),
 	}
-	targetTTL := s.rates.TargetTimeout()
-	for id := range s.trienodeHealIdlers {
-		if _, ok := s.statelessPeers[id]; ok {
-			continue
-		}
-		idlers.ids = append(idlers.ids, id)
-		idlers.caps = append(idlers.caps, s.rates.Capacity(id, TrieNodesMsg, targetTTL))
-	}
+	// targetTTL := s.rates.TargetTimeout()
+	// for id := range s.trienodeHealIdlers {
+	// 	if _, ok := s.statelessPeers[id]; ok {
+	// 		continue
+	// 	}
+	// 	idlers.ids = append(idlers.ids, id)
+	// 	idlers.caps = append(idlers.caps, s.rates.Capacity(id, TrieNodesMsg, targetTTL))
+	// }
 	if len(idlers.ids) == 0 {
 		return
 	}
@@ -1385,11 +1385,11 @@ func (s *Syncer) assignTrienodeHealTasks(success chan *trienodeHealResponse, fai
 			hashes:  hashes,
 			task:    s.healer,
 		}
-		req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
-			peer.Log().Debug("Trienode heal request timed out", "reqid", reqid)
-			s.rates.Update(idle, TrieNodesMsg, 0, 0)
-			s.scheduleRevertTrienodeHealRequest(req)
-		})
+		// req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
+		// 	peer.Log().Debug("Trienode heal request timed out", "reqid", reqid)
+		// 	s.rates.Update(idle, TrieNodesMsg, 0, 0)
+		// 	s.scheduleRevertTrienodeHealRequest(req)
+		// })
 		s.trienodeHealReqs[reqid] = req
 		delete(s.trienodeHealIdlers, idle)
 
@@ -1417,14 +1417,14 @@ func (s *Syncer) assignBytecodeHealTasks(success chan *bytecodeHealResponse, fai
 		ids:  make([]string, 0, len(s.bytecodeHealIdlers)),
 		caps: make([]int, 0, len(s.bytecodeHealIdlers)),
 	}
-	targetTTL := s.rates.TargetTimeout()
-	for id := range s.bytecodeHealIdlers {
-		if _, ok := s.statelessPeers[id]; ok {
-			continue
-		}
-		idlers.ids = append(idlers.ids, id)
-		idlers.caps = append(idlers.caps, s.rates.Capacity(id, ByteCodesMsg, targetTTL))
-	}
+	// targetTTL := s.rates.TargetTimeout()
+	// for id := range s.bytecodeHealIdlers {
+	// 	if _, ok := s.statelessPeers[id]; ok {
+	// 		continue
+	// 	}
+	// 	idlers.ids = append(idlers.ids, id)
+	// 	idlers.caps = append(idlers.caps, s.rates.Capacity(id, ByteCodesMsg, targetTTL))
+	// }
 	if len(idlers.ids) == 0 {
 		return
 	}
@@ -1501,11 +1501,11 @@ func (s *Syncer) assignBytecodeHealTasks(success chan *bytecodeHealResponse, fai
 			hashes:  hashes,
 			task:    s.healer,
 		}
-		req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
-			peer.Log().Debug("Bytecode heal request timed out", "reqid", reqid)
-			s.rates.Update(idle, ByteCodesMsg, 0, 0)
-			s.scheduleRevertBytecodeHealRequest(req)
-		})
+		// req.timeout = time.AfterFunc(s.rates.TargetTimeout(), func() {
+		// 	peer.Log().Debug("Bytecode heal request timed out", "reqid", reqid)
+		// 	s.rates.Update(idle, ByteCodesMsg, 0, 0)
+		// 	s.scheduleRevertBytecodeHealRequest(req)
+		// })
 		s.bytecodeHealReqs[reqid] = req
 		delete(s.bytecodeHealIdlers, idle)
 
@@ -2326,109 +2326,109 @@ func (s *Syncer) forwardAccountTask(task *accountTask) {
 
 // OnAccounts is a callback method to invoke when a range of accounts are
 // received from a remote peer.
-func (s *Syncer) OnAccounts(peer SyncPeer, id uint64, hashes []common.Hash, accounts [][]byte, proof [][]byte) error {
-	size := common.StorageSize(len(hashes) * common.HashLength)
-	for _, account := range accounts {
-		size += common.StorageSize(len(account))
-	}
-	for _, node := range proof {
-		size += common.StorageSize(len(node))
-	}
-	logger := peer.Log().New("reqid", id)
-	logger.Trace("Delivering range of accounts", "hashes", len(hashes), "accounts", len(accounts), "proofs", len(proof), "bytes", size)
+// func (s *Syncer) OnAccounts(peer SyncPeer, id uint64, hashes []common.Hash, accounts [][]byte, proof [][]byte) error {
+// 	size := common.StorageSize(len(hashes) * common.HashLength)
+// 	for _, account := range accounts {
+// 		size += common.StorageSize(len(account))
+// 	}
+// 	for _, node := range proof {
+// 		size += common.StorageSize(len(node))
+// 	}
+// 	logger := peer.Log().New("reqid", id)
+// 	logger.Trace("Delivering range of accounts", "hashes", len(hashes), "accounts", len(accounts), "proofs", len(proof), "bytes", size)
 
-	// Whether or not the response is valid, we can mark the peer as idle and
-	// notify the scheduler to assign a new task. If the response is invalid,
-	// we'll drop the peer in a bit.
-	defer func() {
-		s.lock.Lock()
-		defer s.lock.Unlock()
-		if _, ok := s.peers[peer.ID()]; ok {
-			s.accountIdlers[peer.ID()] = struct{}{}
-		}
-		select {
-		case s.update <- struct{}{}:
-		default:
-		}
-	}()
-	s.lock.Lock()
-	// Ensure the response is for a valid request
-	req, ok := s.accountReqs[id]
-	if !ok {
-		// Request stale, perhaps the peer timed out but came through in the end
-		logger.Warn("Unexpected account range packet")
-		s.lock.Unlock()
-		return nil
-	}
-	delete(s.accountReqs, id)
-	s.rates.Update(peer.ID(), AccountRangeMsg, time.Since(req.time), int(size))
+// 	// Whether or not the response is valid, we can mark the peer as idle and
+// 	// notify the scheduler to assign a new task. If the response is invalid,
+// 	// we'll drop the peer in a bit.
+// 	defer func() {
+// 		s.lock.Lock()
+// 		defer s.lock.Unlock()
+// 		if _, ok := s.peers[peer.ID()]; ok {
+// 			s.accountIdlers[peer.ID()] = struct{}{}
+// 		}
+// 		select {
+// 		case s.update <- struct{}{}:
+// 		default:
+// 		}
+// 	}()
+// 	s.lock.Lock()
+// 	// Ensure the response is for a valid request
+// 	req, ok := s.accountReqs[id]
+// 	if !ok {
+// 		// Request stale, perhaps the peer timed out but came through in the end
+// 		logger.Warn("Unexpected account range packet")
+// 		s.lock.Unlock()
+// 		return nil
+// 	}
+// 	delete(s.accountReqs, id)
+// 	// s.rates.Update(peer.ID(), AccountRangeMsg, time.Since(req.time), int(size))
 
-	// Clean up the request timeout timer, we'll see how to proceed further based
-	// on the actual delivered content
-	if !req.timeout.Stop() {
-		// The timeout is already triggered, and this request will be reverted+rescheduled
-		s.lock.Unlock()
-		return nil
-	}
-	// Response is valid, but check if peer is signalling that it does not have
-	// the requested data. For account range queries that means the state being
-	// retrieved was either already pruned remotely, or the peer is not yet
-	// synced to our head.
-	if len(hashes) == 0 && len(accounts) == 0 && len(proof) == 0 {
-		logger.Debug("Peer rejected account range request", "root", s.root)
-		s.statelessPeers[peer.ID()] = struct{}{}
-		s.lock.Unlock()
+// 	// Clean up the request timeout timer, we'll see how to proceed further based
+// 	// on the actual delivered content
+// 	if !req.timeout.Stop() {
+// 		// The timeout is already triggered, and this request will be reverted+rescheduled
+// 		s.lock.Unlock()
+// 		return nil
+// 	}
+// 	// Response is valid, but check if peer is signalling that it does not have
+// 	// the requested data. For account range queries that means the state being
+// 	// retrieved was either already pruned remotely, or the peer is not yet
+// 	// synced to our head.
+// 	if len(hashes) == 0 && len(accounts) == 0 && len(proof) == 0 {
+// 		logger.Debug("Peer rejected account range request", "root", s.root)
+// 		s.statelessPeers[peer.ID()] = struct{}{}
+// 		s.lock.Unlock()
 
-		// Signal this request as failed, and ready for rescheduling
-		s.scheduleRevertAccountRequest(req)
-		return nil
-	}
-	root := s.root
-	s.lock.Unlock()
+// 		// Signal this request as failed, and ready for rescheduling
+// 		s.scheduleRevertAccountRequest(req)
+// 		return nil
+// 	}
+// 	root := s.root
+// 	s.lock.Unlock()
 
-	// Reconstruct a partial trie from the response and verify it
-	keys := make([][]byte, len(hashes))
-	for i, key := range hashes {
-		keys[i] = common.CopyBytes(key[:])
-	}
-	nodes := make(light.NodeList, len(proof))
-	for i, node := range proof {
-		nodes[i] = node
-	}
-	proofdb := nodes.NodeSet()
+// 	// Reconstruct a partial trie from the response and verify it
+// 	keys := make([][]byte, len(hashes))
+// 	for i, key := range hashes {
+// 		keys[i] = common.CopyBytes(key[:])
+// 	}
+// 	// nodes := make(light.NodeList, len(proof))
+// 	// for i, node := range proof {
+// 	// 	nodes[i] = node
+// 	// }
+// 	// proofdb := nodes.NodeSet()
 
-	var end []byte
-	if len(keys) > 0 {
-		end = keys[len(keys)-1]
-	}
-	cont, err := trie.VerifyRangeProof(root, req.origin[:], end, keys, accounts, proofdb)
-	if err != nil {
-		logger.Warn("Account range failed proof", "err", err)
-		// Signal this request as failed, and ready for rescheduling
-		s.scheduleRevertAccountRequest(req)
-		return err
-	}
-	accs := make([]*types.StateAccount, len(accounts))
-	for i, account := range accounts {
-		acc := new(types.StateAccount)
-		if err := rlp.DecodeBytes(account, acc); err != nil {
-			panic(err) // We created these blobs, we must be able to decode them
-		}
-		accs[i] = acc
-	}
-	response := &accountResponse{
-		task:     req.task,
-		hashes:   hashes,
-		accounts: accs,
-		cont:     cont,
-	}
-	select {
-	case req.deliver <- response:
-	case <-req.cancel:
-	case <-req.stale:
-	}
-	return nil
-}
+// 	var end []byte
+// 	if len(keys) > 0 {
+// 		end = keys[len(keys)-1]
+// 	}
+// 	cont, err := trie.VerifyRangeProof(root, req.origin[:], end, keys, accounts, proofdb)
+// 	if err != nil {
+// 		logger.Warn("Account range failed proof", "err", err)
+// 		// Signal this request as failed, and ready for rescheduling
+// 		s.scheduleRevertAccountRequest(req)
+// 		return err
+// 	}
+// 	accs := make([]*types.StateAccount, len(accounts))
+// 	for i, account := range accounts {
+// 		acc := new(types.StateAccount)
+// 		if err := rlp.DecodeBytes(account, acc); err != nil {
+// 			panic(err) // We created these blobs, we must be able to decode them
+// 		}
+// 		accs[i] = acc
+// 	}
+// 	response := &accountResponse{
+// 		task:     req.task,
+// 		hashes:   hashes,
+// 		accounts: accs,
+// 		cont:     cont,
+// 	}
+// 	select {
+// 	case req.deliver <- response:
+// 	case <-req.cancel:
+// 	case <-req.stale:
+// 	}
+// 	return nil
+// }
 
 // OnByteCodes is a callback method to invoke when a batch of contract
 // bytes codes are received from a remote peer.
@@ -2477,7 +2477,7 @@ func (s *Syncer) onByteCodes(peer SyncPeer, id uint64, bytecodes [][]byte) error
 		return nil
 	}
 	delete(s.bytecodeReqs, id)
-	s.rates.Update(peer.ID(), ByteCodesMsg, time.Since(req.time), len(bytecodes))
+	// s.rates.Update(peer.ID(), ByteCodesMsg, time.Since(req.time), len(bytecodes))
 
 	// Clean up the request timeout timer, we'll see how to proceed further based
 	// on the actual delivered content
@@ -2590,7 +2590,7 @@ func (s *Syncer) OnStorage(peer SyncPeer, id uint64, hashes [][]common.Hash, slo
 		return nil
 	}
 	delete(s.storageReqs, id)
-	s.rates.Update(peer.ID(), StorageRangesMsg, time.Since(req.time), int(size))
+	// s.rates.Update(peer.ID(), StorageRangesMsg, time.Since(req.time), int(size))
 
 	// Clean up the request timeout timer, we'll see how to proceed further based
 	// on the actual delivered content
@@ -2636,38 +2636,38 @@ func (s *Syncer) OnStorage(peer SyncPeer, id uint64, hashes [][]common.Hash, slo
 		for j, key := range hashes[i] {
 			keys[j] = common.CopyBytes(key[:])
 		}
-		nodes := make(light.NodeList, 0, len(proof))
-		if i == len(hashes)-1 {
-			for _, node := range proof {
-				nodes = append(nodes, node)
-			}
-		}
-		var err error
-		if len(nodes) == 0 {
-			// No proof has been attached, the response must cover the entire key
-			// space and hash to the origin root.
-			_, err = trie.VerifyRangeProof(req.roots[i], nil, nil, keys, slots[i], nil)
-			if err != nil {
-				s.scheduleRevertStorageRequest(req) // reschedule request
-				logger.Warn("Storage slots failed proof", "err", err)
-				return err
-			}
-		} else {
-			// A proof was attached, the response is only partial, check that the
-			// returned data is indeed part of the storage trie
-			proofdb := nodes.NodeSet()
+		// nodes := make(light.NodeList, 0, len(proof))
+		// if i == len(hashes)-1 {
+		// 	for _, node := range proof {
+		// 		nodes = append(nodes, node)
+		// 	}
+		// }
+		// var err error
+		// if len(nodes) == 0 {
+		// 	// No proof has been attached, the response must cover the entire key
+		// 	// space and hash to the origin root.
+		// 	_, err = trie.VerifyRangeProof(req.roots[i], nil, nil, keys, slots[i], nil)
+		// 	if err != nil {
+		// 		s.scheduleRevertStorageRequest(req) // reschedule request
+		// 		logger.Warn("Storage slots failed proof", "err", err)
+		// 		return err
+		// 	}
+		// } else {
+		// 	// A proof was attached, the response is only partial, check that the
+		// 	// returned data is indeed part of the storage trie
+		// 	proofdb := nodes.NodeSet()
 
-			var end []byte
-			if len(keys) > 0 {
-				end = keys[len(keys)-1]
-			}
-			cont, err = trie.VerifyRangeProof(req.roots[i], req.origin[:], end, keys, slots[i], proofdb)
-			if err != nil {
-				s.scheduleRevertStorageRequest(req) // reschedule request
-				logger.Warn("Storage range failed proof", "err", err)
-				return err
-			}
-		}
+		// 	var end []byte
+		// 	if len(keys) > 0 {
+		// 		end = keys[len(keys)-1]
+		// 	}
+		// 	cont, err = trie.VerifyRangeProof(req.roots[i], req.origin[:], end, keys, slots[i], proofdb)
+		// 	if err != nil {
+		// 		s.scheduleRevertStorageRequest(req) // reschedule request
+		// 		logger.Warn("Storage range failed proof", "err", err)
+		// 		return err
+		// 	}
+		// }
 	}
 	// Partial tries reconstructed, send them to the scheduler for storage filling
 	response := &storageResponse{
@@ -2721,7 +2721,7 @@ func (s *Syncer) OnTrieNodes(peer SyncPeer, id uint64, trienodes [][]byte) error
 		return nil
 	}
 	delete(s.trienodeHealReqs, id)
-	s.rates.Update(peer.ID(), TrieNodesMsg, time.Since(req.time), len(trienodes))
+	// s.rates.Update(peer.ID(), TrieNodesMsg, time.Since(req.time), len(trienodes))
 
 	// Clean up the request timeout timer, we'll see how to proceed further based
 	// on the actual delivered content
@@ -2828,7 +2828,7 @@ func (s *Syncer) onHealByteCodes(peer SyncPeer, id uint64, bytecodes [][]byte) e
 		return nil
 	}
 	delete(s.bytecodeHealReqs, id)
-	s.rates.Update(peer.ID(), ByteCodesMsg, time.Since(req.time), len(bytecodes))
+	// s.rates.Update(peer.ID(), ByteCodesMsg, time.Since(req.time), len(bytecodes))
 
 	// Clean up the request timeout timer, we'll see how to proceed further based
 	// on the actual delivered content

@@ -8,7 +8,7 @@
 //
 // The go-ethereum library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See Pthe
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ package keystore
 import (
 	"math/big"
 
-	"github.com/sachindigi195/go-eth-evm"
+    "github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts"
 	"github.com/sachindigi195/go-eth-evm/core/types"
 	"github.com/sachindigi195/go-eth-evm/crypto"

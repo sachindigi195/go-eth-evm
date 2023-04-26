@@ -22,7 +22,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/internal/utesting"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 // Suite represents a structure used to test a node's conformance

@@ -26,7 +26,7 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/core/forkid"
-	"github.com/sachindigi195/go-eth-evm/p2p/enr"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enr"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	"github.com/urfave/cli/v2"

@@ -23,7 +23,7 @@ import (
 
 	"github.com/sachindigi195/go-eth-evm/core/types"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 	"github.com/stretchr/testify/assert"
 )
 

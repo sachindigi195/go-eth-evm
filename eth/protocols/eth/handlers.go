@@ -17,7 +17,7 @@
 package eth
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
 
 	"github.com/sachindigi195/go-eth-evm/common"
@@ -35,8 +35,9 @@ func handleGetBlockHeaders66(backend Backend, msg Decoder, peer *Peer) error {
 	if err := msg.Decode(&query); err != nil {
 		return fmt.Errorf("%w: message %v: %v", errDecode, msg, err)
 	}
-	response := ServiceGetBlockHeadersQuery(backend.Chain(), query.GetBlockHeadersPacket, peer)
-	return peer.ReplyBlockHeadersRLP(query.RequestId, response)
+	// response := ServiceGetBlockHeadersQuery(backend.Chain(), query.GetBlockHeadersPacket, peer)
+	// return peer.ReplyBlockHeadersRLP(query.RequestId, response)
+	return nil
 }
 
 // ServiceGetBlockHeadersQuery assembles the response to a header query. It is
@@ -107,9 +108,9 @@ func serviceNonContiguousBlockHeaderQuery(chain *core.BlockChain, query *GetBloc
 				next    = current + query.Skip + 1
 			)
 			if next <= current {
-				infos, _ := json.MarshalIndent(peer.Peer.Info(), "", "  ")
-				peer.Log().Warn("GetBlockHeaders skip overflow attack", "current", current, "skip", query.Skip, "next", next, "attacker", infos)
-				unknown = true
+				// infos, _ := json.MarshalIndent(peer.Peer.Info(), "", "  ")
+				// peer.Log().Warn("GetBlockHeaders skip overflow attack", "current", current, "skip", query.Skip, "next", next, "attacker", infos)
+				// unknown = true
 			} else {
 				if header := chain.GetHeaderByNumber(next); header != nil {
 					nextHash := header.Hash()
@@ -208,8 +209,9 @@ func handleGetBlockBodies66(backend Backend, msg Decoder, peer *Peer) error {
 	if err := msg.Decode(&query); err != nil {
 		return fmt.Errorf("%w: message %v: %v", errDecode, msg, err)
 	}
-	response := ServiceGetBlockBodiesQuery(backend.Chain(), query.GetBlockBodiesPacket)
-	return peer.ReplyBlockBodiesRLP(query.RequestId, response)
+	// response := ServiceGetBlockBodiesQuery(backend.Chain(), query.GetBlockBodiesPacket)
+	// return peer.ReplyBlockBodiesRLP(query.RequestId, response)
+	return nil
 }
 
 // ServiceGetBlockBodiesQuery assembles the response to a body query. It is
@@ -239,8 +241,9 @@ func handleGetNodeData66(backend Backend, msg Decoder, peer *Peer) error {
 	if err := msg.Decode(&query); err != nil {
 		return fmt.Errorf("%w: message %v: %v", errDecode, msg, err)
 	}
-	response := ServiceGetNodeDataQuery(backend.Chain(), query.GetNodeDataPacket)
-	return peer.ReplyNodeData(query.RequestId, response)
+	// response := ServiceGetNodeDataQuery(backend.Chain(), query.GetNodeDataPacket)
+	// return peer.ReplyNodeData(query.RequestId, response)
+	return nil
 }
 
 // ServiceGetNodeDataQuery assembles the response to a node data query. It is
@@ -276,8 +279,9 @@ func handleGetReceipts66(backend Backend, msg Decoder, peer *Peer) error {
 	if err := msg.Decode(&query); err != nil {
 		return fmt.Errorf("%w: message %v: %v", errDecode, msg, err)
 	}
-	response := ServiceGetReceiptsQuery(backend.Chain(), query.GetReceiptsPacket)
-	return peer.ReplyReceiptsRLP(query.RequestId, response)
+	// response := ServiceGetReceiptsQuery(backend.Chain(), query.GetReceiptsPacket)
+	// return peer.ReplyReceiptsRLP(query.RequestId, response)
+	return nil
 }
 
 // ServiceGetReceiptsQuery assembles the response to a receipt query. It is
@@ -546,7 +550,7 @@ func handlePooledTransactions66(backend Backend, msg Decoder, peer *Peer) error 
 		}
 		peer.markTransaction(tx.Hash())
 	}
-	requestTracker.Fulfil(peer.id, peer.version, PooledTransactionsMsg, txs.RequestId)
+	// requestTracker.Fulfil(peer.id, peer.version, PooledTransactionsMsg, txs.RequestId)
 
 	return backend.Handle(peer, &txs.PooledTransactionsPacket)
 }

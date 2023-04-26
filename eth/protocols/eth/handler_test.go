@@ -34,8 +34,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/core/vm"
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/ethdb"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/sachindigi195/go-eth-evm/params"
 )
 

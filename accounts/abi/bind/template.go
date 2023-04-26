@@ -91,7 +91,7 @@ import (
 	"strings"
 	"errors"
 
-	ethereum "github.com/sachindigi195/go-eth-evm"
+	ethereum "github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts/abi"
 	"github.com/sachindigi195/go-eth-evm/accounts/abi/bind"
 	"github.com/sachindigi195/go-eth-evm/common"

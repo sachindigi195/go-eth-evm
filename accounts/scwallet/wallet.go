@@ -18,7 +18,7 @@ package scwallet
 
 import (
 	"bytes"
-	"context"
+	// "context"
 	"crypto/hmac"
 	"crypto/sha256"
 	"crypto/sha512"
@@ -33,7 +33,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm"
+    "github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/core/types"
@@ -400,7 +400,7 @@ func (w *Wallet) Open(passphrase string) error {
 	w.deriveReq = make(chan chan struct{})
 	w.deriveQuit = make(chan chan error)
 
-	go w.selfDerive()
+	// go w.selfDerive()
 
 	// Notify anyone listening for wallet events that a new device is accessible
 	go w.Hub.updateFeed.Send(accounts.WalletEvent{Wallet: w, Kind: accounts.WalletOpened})
@@ -437,123 +437,123 @@ func (w *Wallet) Close() error {
 
 // selfDerive is an account derivation loop that upon request attempts to find
 // new non-zero accounts.
-func (w *Wallet) selfDerive() {
-	w.log.Debug("Smart card wallet self-derivation started")
-	defer w.log.Debug("Smart card wallet self-derivation stopped")
+// func (w *Wallet) selfDerive() {
+// 	w.log.Debug("Smart card wallet self-derivation started")
+// 	defer w.log.Debug("Smart card wallet self-derivation stopped")
 
-	// Execute self-derivations until termination or error
-	var (
-		reqc chan struct{}
-		errc chan error
-		err  error
-	)
-	for errc == nil && err == nil {
-		// Wait until either derivation or termination is requested
-		select {
-		case errc = <-w.deriveQuit:
-			// Termination requested
-			continue
-		case reqc = <-w.deriveReq:
-			// Account discovery requested
-		}
-		// Derivation needs a chain and device access, skip if either unavailable
-		w.lock.Lock()
-		if w.session == nil || w.deriveChain == nil {
-			w.lock.Unlock()
-			reqc <- struct{}{}
-			continue
-		}
-		pairing := w.Hub.pairing(w)
+// 	// Execute self-derivations until termination or error
+// 	var (
+// 		reqc chan struct{}
+// 		errc chan error
+// 		err  error
+// 	)
+// 	for errc == nil && err == nil {
+// 		// Wait until either derivation or termination is requested
+// 		select {
+// 		case errc = <-w.deriveQuit:
+// 			// Termination requested
+// 			continue
+// 		case reqc = <-w.deriveReq:
+// 			// Account discovery requested
+// 		}
+// 		// Derivation needs a chain and device access, skip if either unavailable
+// 		w.lock.Lock()
+// 		if w.session == nil || w.deriveChain == nil {
+// 			w.lock.Unlock()
+// 			reqc <- struct{}{}
+// 			continue
+// 		}
+// 		pairing := w.Hub.pairing(w)
 
-		// Device lock obtained, derive the next batch of accounts
-		var (
-			paths   []accounts.DerivationPath
-			nextAcc accounts.Account
+// 		// Device lock obtained, derive the next batch of accounts
+// 		var (
+// 			paths   []accounts.DerivationPath
+// 			nextAcc accounts.Account
 
-			nextPaths = append([]accounts.DerivationPath{}, w.deriveNextPaths...)
-			nextAddrs = append([]common.Address{}, w.deriveNextAddrs...)
+// 			nextPaths = append([]accounts.DerivationPath{}, w.deriveNextPaths...)
+// 			nextAddrs = append([]common.Address{}, w.deriveNextAddrs...)
 
-			context = context.Background()
-		)
-		for i := 0; i < len(nextAddrs); i++ {
-			for empty := false; !empty; {
-				// Retrieve the next derived Ethereum account
-				if nextAddrs[i] == (common.Address{}) {
-					if nextAcc, err = w.session.derive(nextPaths[i]); err != nil {
-						w.log.Warn("Smartcard wallet account derivation failed", "err", err)
-						break
-					}
-					nextAddrs[i] = nextAcc.Address
-				}
-				// Check the account's status against the current chain state
-				var (
-					balance *big.Int
-					nonce   uint64
-				)
-				balance, err = w.deriveChain.BalanceAt(context, nextAddrs[i], nil)
-				if err != nil {
-					w.log.Warn("Smartcard wallet balance retrieval failed", "err", err)
-					break
-				}
-				nonce, err = w.deriveChain.NonceAt(context, nextAddrs[i], nil)
-				if err != nil {
-					w.log.Warn("Smartcard wallet nonce retrieval failed", "err", err)
-					break
-				}
-				// If the next account is empty, stop self-derivation, but add for the last base path
-				if balance.Sign() == 0 && nonce == 0 {
-					empty = true
-					if i < len(nextAddrs)-1 {
-						break
-					}
-				}
-				// We've just self-derived a new account, start tracking it locally
-				path := make(accounts.DerivationPath, len(nextPaths[i]))
-				copy(path[:], nextPaths[i][:])
-				paths = append(paths, path)
+// 			context = context.Background()
+// 		)
+// 		for i := 0; i < len(nextAddrs); i++ {
+// 			for empty := false; !empty; {
+// 				// Retrieve the next derived Ethereum account
+// 				if nextAddrs[i] == (common.Address{}) {
+// 					if nextAcc, err = w.session.derive(nextPaths[i]); err != nil {
+// 						w.log.Warn("Smartcard wallet account derivation failed", "err", err)
+// 						break
+// 					}
+// 					nextAddrs[i] = nextAcc.Address
+// 				}
+// 				// Check the account's status against the current chain state
+// 				var (
+// 					balance *big.Int
+// 					nonce   uint64
+// 				)
+// 				balance, err = w.deriveChain.BalanceAt(context, nextAddrs[i], nil)
+// 				if err != nil {
+// 					w.log.Warn("Smartcard wallet balance retrieval failed", "err", err)
+// 					break
+// 				}
+// 				nonce, err = w.deriveChain.NonceAt(context, nextAddrs[i], nil)
+// 				if err != nil {
+// 					w.log.Warn("Smartcard wallet nonce retrieval failed", "err", err)
+// 					break
+// 				}
+// 				// If the next account is empty, stop self-derivation, but add for the last base path
+// 				if balance.Sign() == 0 && nonce == 0 {
+// 					empty = true
+// 					if i < len(nextAddrs)-1 {
+// 						break
+// 					}
+// 				}
+// 				// We've just self-derived a new account, start tracking it locally
+// 				path := make(accounts.DerivationPath, len(nextPaths[i]))
+// 				copy(path[:], nextPaths[i][:])
+// 				paths = append(paths, path)
 
-				// Display a log message to the user for new (or previously empty accounts)
-				if _, known := pairing.Accounts[nextAddrs[i]]; !known || !empty || nextAddrs[i] != w.deriveNextAddrs[i] {
-					w.log.Info("Smartcard wallet discovered new account", "address", nextAddrs[i], "path", path, "balance", balance, "nonce", nonce)
-				}
-				pairing.Accounts[nextAddrs[i]] = path
+// 				// Display a log message to the user for new (or previously empty accounts)
+// 				if _, known := pairing.Accounts[nextAddrs[i]]; !known || !empty || nextAddrs[i] != w.deriveNextAddrs[i] {
+// 					w.log.Info("Smartcard wallet discovered new account", "address", nextAddrs[i], "path", path, "balance", balance, "nonce", nonce)
+// 				}
+// 				pairing.Accounts[nextAddrs[i]] = path
 
-				// Fetch the next potential account
-				if !empty {
-					nextAddrs[i] = common.Address{}
-					nextPaths[i][len(nextPaths[i])-1]++
-				}
-			}
-		}
-		// If there are new accounts, write them out
-		if len(paths) > 0 {
-			err = w.Hub.setPairing(w, pairing)
-		}
-		// Shift the self-derivation forward
-		w.deriveNextAddrs = nextAddrs
-		w.deriveNextPaths = nextPaths
+// 				// Fetch the next potential account
+// 				if !empty {
+// 					nextAddrs[i] = common.Address{}
+// 					nextPaths[i][len(nextPaths[i])-1]++
+// 				}
+// 			}
+// 		}
+// 		// If there are new accounts, write them out
+// 		if len(paths) > 0 {
+// 			err = w.Hub.setPairing(w, pairing)
+// 		}
+// 		// Shift the self-derivation forward
+// 		w.deriveNextAddrs = nextAddrs
+// 		w.deriveNextPaths = nextPaths
 
-		// Self derivation complete, release device lock
-		w.lock.Unlock()
+// 		// Self derivation complete, release device lock
+// 		w.lock.Unlock()
 
-		// Notify the user of termination and loop after a bit of time (to avoid trashing)
-		reqc <- struct{}{}
-		if err == nil {
-			select {
-			case errc = <-w.deriveQuit:
-				// Termination requested, abort
-			case <-time.After(selfDeriveThrottling):
-				// Waited enough, willing to self-derive again
-			}
-		}
-	}
-	// In case of error, wait for termination
-	if err != nil {
-		w.log.Debug("Smartcard wallet self-derivation failed", "err", err)
-		errc = <-w.deriveQuit
-	}
-	errc <- err
-}
+// 		// Notify the user of termination and loop after a bit of time (to avoid trashing)
+// 		reqc <- struct{}{}
+// 		if err == nil {
+// 			select {
+// 			case errc = <-w.deriveQuit:
+// 				// Termination requested, abort
+// 			case <-time.After(selfDeriveThrottling):
+// 				// Waited enough, willing to self-derive again
+// 			}
+// 		}
+// 	}
+// 	// In case of error, wait for termination
+// 	if err != nil {
+// 		w.log.Debug("Smartcard wallet self-derivation failed", "err", err)
+// 		errc = <-w.deriveQuit
+// 	}
+// 	errc <- err
+// }
 
 // Accounts retrieves the list of signing accounts the wallet is currently aware
 // of. For hierarchical deterministic wallets, the list will not be exhaustive,
@@ -604,7 +604,7 @@ func (w *Wallet) Contains(account accounts.Account) bool {
 
 // Initialize installs a keypair generated from the provided key into the wallet.
 func (w *Wallet) Initialize(seed []byte) error {
-	go w.selfDerive()
+	// go w.selfDerive()
 	// DO NOT lock at this stage, as the initialize
 	// function relies on Status()
 	return w.session.initialize(seed)

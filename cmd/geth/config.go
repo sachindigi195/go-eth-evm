@@ -38,7 +38,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/internal/version"
 	"github.com/sachindigi195/go-eth-evm/log"
 	"github.com/sachindigi195/go-eth-evm/metrics"
-	"github.com/sachindigi195/go-eth-evm/node"
+	//"github.com/sachindigi195/go-eth-evm/node"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/naoina/toml"
 )

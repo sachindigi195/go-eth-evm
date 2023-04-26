@@ -11,7 +11,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/core/txpool"
 	"github.com/sachindigi195/go-eth-evm/eth/downloader"
 	"github.com/sachindigi195/go-eth-evm/eth/gasprice"
-	"github.com/sachindigi195/go-eth-evm/miner"
+	// "github.com/sachindigi195/go-eth-evm/miner"
 	"github.com/sachindigi195/go-eth-evm/params"
 )
 
@@ -49,7 +49,7 @@ func (c Config) MarshalTOML() (interface{}, error) {
 		SnapshotCache           int
 		Preimages               bool
 		FilterLogCacheSize      int
-		Miner                   miner.Config
+		// Miner                   miner.Config
 		Ethash                  ethash.Config
 		TxPool                  txpool.Config
 		GPO                     gasprice.Config
@@ -94,7 +94,7 @@ func (c Config) MarshalTOML() (interface{}, error) {
 	enc.SnapshotCache = c.SnapshotCache
 	enc.Preimages = c.Preimages
 	enc.FilterLogCacheSize = c.FilterLogCacheSize
-	enc.Miner = c.Miner
+	// enc.Miner = c.Miner
 	enc.Ethash = c.Ethash
 	enc.TxPool = c.TxPool
 	enc.GPO = c.GPO
@@ -143,7 +143,7 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 		SnapshotCache           *int
 		Preimages               *bool
 		FilterLogCacheSize      *int
-		Miner                   *miner.Config
+		// Miner                   *miner.Config
 		Ethash                  *ethash.Config
 		TxPool                  *txpool.Config
 		GPO                     *gasprice.Config
@@ -253,9 +253,9 @@ func (c *Config) UnmarshalTOML(unmarshal func(interface{}) error) error {
 	if dec.FilterLogCacheSize != nil {
 		c.FilterLogCacheSize = *dec.FilterLogCacheSize
 	}
-	if dec.Miner != nil {
-		c.Miner = *dec.Miner
-	}
+	// if dec.Miner != nil {
+	// 	c.Miner = *dec.Miner
+	// }
 	if dec.Ethash != nil {
 		c.Ethash = *dec.Ethash
 	}

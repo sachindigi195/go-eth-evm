@@ -23,7 +23,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/cmd/devp2p/internal/v5test"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/internal/flags"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover"
 	"github.com/urfave/cli/v2"
 )
 

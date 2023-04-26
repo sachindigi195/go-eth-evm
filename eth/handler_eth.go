@@ -26,7 +26,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/core"
 	"github.com/sachindigi195/go-eth-evm/core/types"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 // ethHandler implements the eth.Backend interface to handle the various network

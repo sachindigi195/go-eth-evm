@@ -27,8 +27,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/internal/flags"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/urfave/cli/v2"
 )

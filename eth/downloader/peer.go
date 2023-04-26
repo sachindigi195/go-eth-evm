@@ -29,7 +29,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/event"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/msgrate"
+	// "github.com/sachindigi195/go-eth-evm/p2p/msgrate"
 )
 
 const (
@@ -45,7 +45,7 @@ var (
 type peerConnection struct {
 	id string // Unique identifier of the peer
 
-	rates   *msgrate.Tracker         // Tracker to hone in on the number of items retrievable per second
+	// rates   *msgrate.Tracker         // Tracker to hone in on the number of items retrievable per second
 	lacking map[common.Hash]struct{} // Set of hashes not to request (didn't have previously)
 
 	peer Peer
@@ -110,50 +110,51 @@ func (p *peerConnection) Reset() {
 // UpdateHeaderRate updates the peer's estimated header retrieval throughput with
 // the current measurement.
 func (p *peerConnection) UpdateHeaderRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.BlockHeadersMsg, elapsed, delivered)
+	// p.rates.Update(eth.BlockHeadersMsg, elapsed, delivered)
 }
 
 // UpdateBodyRate updates the peer's estimated body retrieval throughput with the
 // current measurement.
 func (p *peerConnection) UpdateBodyRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.BlockBodiesMsg, elapsed, delivered)
+	// p.rates.Update(eth.BlockBodiesMsg, elapsed, delivered)
 }
 
 // UpdateReceiptRate updates the peer's estimated receipt retrieval throughput
 // with the current measurement.
 func (p *peerConnection) UpdateReceiptRate(delivered int, elapsed time.Duration) {
-	p.rates.Update(eth.ReceiptsMsg, elapsed, delivered)
+	// p.rates.Update(eth.ReceiptsMsg, elapsed, delivered)
 }
 
 // HeaderCapacity retrieves the peer's header download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.BlockHeadersMsg, targetRTT)
-	if cap > MaxHeaderFetch {
-		cap = MaxHeaderFetch
-	}
-	return cap
-}
+// func (p *peerConnection) HeaderCapacity(targetRTT time.Duration) int {
+// 	// cap := p.rates.Capacity(eth.BlockHeadersMsg, targetRTT)
+// 	// if cap > MaxHeaderFetch {
+// 	// 	cap = MaxHeaderFetch
+// 	// }
+// 	// return cap
+// 	return nil
+// }
 
 // BodyCapacity retrieves the peer's body download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) BodyCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.BlockBodiesMsg, targetRTT)
-	if cap > MaxBlockFetch {
-		cap = MaxBlockFetch
-	}
-	return cap
-}
+// func (p *peerConnection) BodyCapacity(targetRTT time.Duration) int {
+// 	cap := p.rates.Capacity(eth.BlockBodiesMsg, targetRTT)
+// 	if cap > MaxBlockFetch {
+// 		cap = MaxBlockFetch
+// 	}
+// 	return cap
+// }
 
 // ReceiptCapacity retrieves the peers receipt download allowance based on its
 // previously discovered throughput.
-func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int {
-	cap := p.rates.Capacity(eth.ReceiptsMsg, targetRTT)
-	if cap > MaxReceiptFetch {
-		cap = MaxReceiptFetch
-	}
-	return cap
-}
+// func (p *peerConnection) ReceiptCapacity(targetRTT time.Duration) int {
+// 	// cap := p.rates.Capacity(eth.ReceiptsMsg, targetRTT)
+// 	// if cap > MaxReceiptFetch {
+// 	// 	cap = MaxReceiptFetch
+// 	// }
+// 	// return cap
+// }
 
 // MarkLacking appends a new entity to the set of items (blocks, receipts, states)
 // that a peer is known not to have (i.e. have been requested before). If the
@@ -192,7 +193,7 @@ type peeringEvent struct {
 // download procedure.
 type peerSet struct {
 	peers  map[string]*peerConnection
-	rates  *msgrate.Trackers // Set of rate trackers to give the sync a common beat
+	// rates  *msgrate.Trackers // Set of rate trackers to give the sync a common beat
 	events event.Feed        // Feed to publish peer lifecycle events on
 
 	lock sync.RWMutex
@@ -202,7 +203,7 @@ type peerSet struct {
 func newPeerSet() *peerSet {
 	return &peerSet{
 		peers: make(map[string]*peerConnection),
-		rates: msgrate.NewTrackers(log.New("proto", "eth")),
+		// rates: msgrate.NewTrackers(log.New("proto", "eth")),
 	}
 }
 
@@ -228,24 +229,24 @@ func (ps *peerSet) Reset() {
 // The method also sets the starting throughput values of the new peer to the
 // average of all existing peers, to give it a realistic chance of being used
 // for data retrievals.
-func (ps *peerSet) Register(p *peerConnection) error {
-	// Register the new peer with some meaningful defaults
-	ps.lock.Lock()
-	if _, ok := ps.peers[p.id]; ok {
-		ps.lock.Unlock()
-		return errAlreadyRegistered
-	}
-	p.rates = msgrate.NewTracker(ps.rates.MeanCapacities(), ps.rates.MedianRoundTrip())
-	if err := ps.rates.Track(p.id, p.rates); err != nil {
-		ps.lock.Unlock()
-		return err
-	}
-	ps.peers[p.id] = p
-	ps.lock.Unlock()
+// func (ps *peerSet) Register(p *peerConnection) error {
+// 	// Register the new peer with some meaningful defaults
+// 	ps.lock.Lock()
+// 	if _, ok := ps.peers[p.id]; ok {
+// 		ps.lock.Unlock()
+// 		return errAlreadyRegistered
+// 	}
+// 	p.rates = msgrate.NewTracker(ps.rates.MeanCapacities(), ps.rates.MedianRoundTrip())
+// 	if err := ps.rates.Track(p.id, p.rates); err != nil {
+// 		ps.lock.Unlock()
+// 		return err
+// 	}
+// 	ps.peers[p.id] = p
+// 	ps.lock.Unlock()
 
-	ps.events.Send(&peeringEvent{peer: p, join: true})
-	return nil
-}
+// 	ps.events.Send(&peeringEvent{peer: p, join: true})
+// 	return nil
+// }
 
 // Unregister removes a remote peer from the active set, disabling any further
 // actions to/from that particular entity.
@@ -257,7 +258,7 @@ func (ps *peerSet) Unregister(id string) error {
 		return errNotRegistered
 	}
 	delete(ps.peers, id)
-	ps.rates.Untrack(id)
+	// ps.rates.Untrack(id)
 	ps.lock.Unlock()
 
 	ps.events.Send(&peeringEvent{peer: p, join: false})

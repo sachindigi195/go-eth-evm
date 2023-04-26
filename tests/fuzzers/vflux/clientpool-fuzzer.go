@@ -29,8 +29,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/les/vflux"
 	vfs "github.com/sachindigi195/go-eth-evm/les/vflux/server"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
-	"github.com/sachindigi195/go-eth-evm/p2p/enr"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enr"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 )
 

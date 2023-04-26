@@ -23,7 +23,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm/beacon/engine"
+	// "github.com/sachindigi195/go-eth-evm/beacon/engine"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/common/hexutil"
 	"github.com/sachindigi195/go-eth-evm/core/rawdb"
@@ -31,8 +31,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/eth"
 	"github.com/sachindigi195/go-eth-evm/eth/downloader"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/miner"
-	"github.com/sachindigi195/go-eth-evm/node"
+	// "github.com/sachindigi195/go-eth-evm/miner"
+	// "github.com/sachindigi195/go-eth-evm/node"
 	"github.com/sachindigi195/go-eth-evm/rpc"
 )
 

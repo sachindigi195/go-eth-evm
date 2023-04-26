@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/rlpx"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/rlpx"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 )
 

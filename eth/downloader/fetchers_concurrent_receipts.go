@@ -42,9 +42,9 @@ func (q *receiptQueue) pending() int {
 
 // capacity is responsible for calculating how many receipts a particular peer is
 // estimated to be able to retrieve within the allotted round trip time.
-func (q *receiptQueue) capacity(peer *peerConnection, rtt time.Duration) int {
-	return peer.ReceiptCapacity(rtt)
-}
+// func (q *receiptQueue) capacity(peer *peerConnection, rtt time.Duration) int {
+// 	return peer.ReceiptCapacity(rtt)
+// }
 
 // updateCapacity is responsible for updating how many receipts a particular peer
 // is estimated to be able to retrieve in a unit time.

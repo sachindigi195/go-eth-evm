@@ -22,8 +22,8 @@ import (
 
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/core/forkid"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 // Tests that handshake failures are detected and reported correctly.

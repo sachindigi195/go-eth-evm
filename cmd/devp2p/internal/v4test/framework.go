@@ -23,8 +23,8 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/crypto"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover/v4wire"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover/v4wire"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 const waitTime = 300 * time.Millisecond

@@ -46,10 +46,10 @@ import (
 
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/internal/flags"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
-	"github.com/sachindigi195/go-eth-evm/p2p/simulations"
-	"github.com/sachindigi195/go-eth-evm/p2p/simulations/adapters"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/simulations"
+	// "github.com/sachindigi195/go-eth-evm/p2p/simulations/adapters"
 	"github.com/sachindigi195/go-eth-evm/rpc"
 	"github.com/urfave/cli/v2"
 )

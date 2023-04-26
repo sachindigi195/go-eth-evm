@@ -24,7 +24,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/snap"
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 )
 
 var (

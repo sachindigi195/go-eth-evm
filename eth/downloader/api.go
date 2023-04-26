@@ -20,7 +20,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/sachindigi195/go-eth-evm"
+	 "github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/event"
 	"github.com/sachindigi195/go-eth-evm/rpc"
 )

@@ -27,8 +27,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/accounts/keystore"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/console/prompt"
-	"github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/urfave/cli/v2"
 )
 

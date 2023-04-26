@@ -23,7 +23,7 @@ import (
 
 	"github.com/cloudflare/cloudflare-go"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
+	// "github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
 	"github.com/urfave/cli/v2"
 )
 

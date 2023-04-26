@@ -25,7 +25,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm"
+	"github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/common/lru"
 	"github.com/sachindigi195/go-eth-evm/core"

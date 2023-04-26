@@ -22,7 +22,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm"
+	 "github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/consensus"
@@ -37,7 +37,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/eth/tracers"
 	"github.com/sachindigi195/go-eth-evm/ethdb"
 	"github.com/sachindigi195/go-eth-evm/event"
-	"github.com/sachindigi195/go-eth-evm/miner"
+	// "github.com/sachindigi195/go-eth-evm/miner"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/sachindigi195/go-eth-evm/rpc"
 )

@@ -35,8 +35,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/eth/downloader"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/event"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 )

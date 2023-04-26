@@ -37,7 +37,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/ethdb"
 	"github.com/sachindigi195/go-eth-evm/event"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 	"github.com/sachindigi195/go-eth-evm/params"
 )
 
@@ -489,16 +489,16 @@ func (h *handler) runEthPeer(peer *eth.Peer, handler eth.Handler) error {
 // starts handling inbound messages. As `snap` is only a satellite protocol to
 // `eth`, all subsystem registrations and lifecycle management will be done by
 // the main `eth` handler to prevent strange races.
-func (h *handler) runSnapExtension(peer *snap.Peer, handler snap.Handler) error {
-	h.peerWG.Add(1)
-	defer h.peerWG.Done()
+// func (h *handler) runSnapExtension(peer *snap.Peer, handler snap.Handler) error {
+// 	h.peerWG.Add(1)
+// 	defer h.peerWG.Done()
 
-	if err := h.peers.registerSnapExtension(peer); err != nil {
-		peer.Log().Warn("Snapshot extension registration failed", "err", err)
-		return err
-	}
-	return handler(peer)
-}
+// 	if err := h.peers.registerSnapExtension(peer); err != nil {
+// 		peer.Log().Warn("Snapshot extension registration failed", "err", err)
+// 		return err
+// 	}
+// 	return handler(peer)
+// }
 
 // removePeer requests disconnection of a peer.
 func (h *handler) removePeer(id string) {

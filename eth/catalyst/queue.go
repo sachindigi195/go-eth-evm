@@ -19,10 +19,10 @@ package catalyst
 import (
 	"sync"
 
-	"github.com/sachindigi195/go-eth-evm/beacon/engine"
+	// "github.com/sachindigi195/go-eth-evm/beacon/engine"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/core/types"
-	"github.com/sachindigi195/go-eth-evm/miner"
+	// "github.com/sachindigi195/go-eth-evm/miner"
 )
 
 // maxTrackedPayloads is the maximum number of prepared payloads the execution
@@ -40,69 +40,69 @@ const maxTrackedHeaders = 96
 
 // payloadQueueItem represents an id->payload tuple to store until it's retrieved
 // or evicted.
-type payloadQueueItem struct {
-	id      engine.PayloadID
-	payload *miner.Payload
-}
+// type payloadQueueItem struct {
+// 	id      engine.PayloadID
+// 	payload *miner.Payload
+// }
 
 // payloadQueue tracks the latest handful of constructed payloads to be retrieved
 // by the beacon chain if block production is requested.
-type payloadQueue struct {
-	payloads []*payloadQueueItem
-	lock     sync.RWMutex
-}
+// type payloadQueue struct {
+// 	payloads []*payloadQueueItem
+// 	lock     sync.RWMutex
+// }
 
 // newPayloadQueue creates a pre-initialized queue with a fixed number of slots
 // all containing empty items.
-func newPayloadQueue() *payloadQueue {
-	return &payloadQueue{
-		payloads: make([]*payloadQueueItem, maxTrackedPayloads),
-	}
-}
+// func newPayloadQueue() *payloadQueue {
+// 	return &payloadQueue{
+// 		payloads: make([]*payloadQueueItem, maxTrackedPayloads),
+// 	}
+// }
 
 // put inserts a new payload into the queue at the given id.
-func (q *payloadQueue) put(id engine.PayloadID, payload *miner.Payload) {
-	q.lock.Lock()
-	defer q.lock.Unlock()
+// func (q *payloadQueue) put(id engine.PayloadID, payload *miner.Payload) {
+// 	q.lock.Lock()
+// 	defer q.lock.Unlock()
 
-	copy(q.payloads[1:], q.payloads)
-	q.payloads[0] = &payloadQueueItem{
-		id:      id,
-		payload: payload,
-	}
-}
+// 	copy(q.payloads[1:], q.payloads)
+// 	q.payloads[0] = &payloadQueueItem{
+// 		id:      id,
+// 		payload: payload,
+// 	}
+// }
 
 // get retrieves a previously stored payload item or nil if it does not exist.
-func (q *payloadQueue) get(id engine.PayloadID) *engine.ExecutionPayloadEnvelope {
-	q.lock.RLock()
-	defer q.lock.RUnlock()
+// func (q *payloadQueue) get(id engine.PayloadID) *engine.ExecutionPayloadEnvelope {
+// 	q.lock.RLock()
+// 	defer q.lock.RUnlock()
 
-	for _, item := range q.payloads {
-		if item == nil {
-			return nil // no more items
-		}
-		if item.id == id {
-			return item.payload.Resolve()
-		}
-	}
-	return nil
-}
+// 	for _, item := range q.payloads {
+// 		if item == nil {
+// 			return nil // no more items
+// 		}
+// 		if item.id == id {
+// 			return item.payload.Resolve()
+// 		}
+// 	}
+// 	return nil
+// }
 
 // has checks if a particular payload is already tracked.
-func (q *payloadQueue) has(id engine.PayloadID) bool {
-	q.lock.RLock()
-	defer q.lock.RUnlock()
+// func (q *payloadQueue) has(id engine.PayloadID) bool {
+// 	q.lock.RLock()
+// 	defer q.lock.RUnlock()
 
-	for _, item := range q.payloads {
-		if item == nil {
-			return false
-		}
-		if item.id == id {
-			return true
-		}
-	}
-	return false
-}
+// 	for _, item := range q.payloads {
+// 		if item == nil {
+// 			return false
+// 		}
+// 		if item.id == id {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
 
 // headerQueueItem represents an hash->header tuple to store until it's retrieved
 // or evicted.

@@ -17,17 +17,17 @@
 package eth
 
 import (
-	"fmt"
+	// "fmt"
 	"math/big"
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/core"
 	"github.com/sachindigi195/go-eth-evm/core/types"
-	"github.com/sachindigi195/go-eth-evm/metrics"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
-	"github.com/sachindigi195/go-eth-evm/p2p/enr"
+	// "github.com/sachindigi195/go-eth-evm/metrics"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enr"
 	"github.com/sachindigi195/go-eth-evm/params"
 )
 
@@ -79,7 +79,7 @@ type Backend interface {
 	RunPeer(peer *Peer, handler Handler) error
 
 	// PeerInfo retrieves all known `eth` information about a peer.
-	PeerInfo(id enode.ID) interface{}
+	// PeerInfo(id enode.ID) interface{}
 
 	// Handle is a callback to be invoked when a data packet is received from
 	// the remote peer. Only packets not consumed by the protocol handler will
@@ -94,35 +94,35 @@ type TxPool interface {
 }
 
 // MakeProtocols constructs the P2P protocol definitions for `eth`.
-func MakeProtocols(backend Backend, network uint64, dnsdisc enode.Iterator) []p2p.Protocol {
-	protocols := make([]p2p.Protocol, len(ProtocolVersions))
-	for i, version := range ProtocolVersions {
-		version := version // Closure
+// func MakeProtocols(backend Backend, network uint64, dnsdisc enode.Iterator) []p2p.Protocol {
+// 	protocols := make([]p2p.Protocol, len(ProtocolVersions))
+// 	for i, version := range ProtocolVersions {
+// 		version := version // Closure
 
-		protocols[i] = p2p.Protocol{
-			Name:    ProtocolName,
-			Version: version,
-			Length:  protocolLengths[version],
-			Run: func(p *p2p.Peer, rw p2p.MsgReadWriter) error {
-				peer := NewPeer(version, p, rw, backend.TxPool())
-				defer peer.Close()
+// 		protocols[i] = p2p.Protocol{
+// 			Name:    ProtocolName,
+// 			Version: version,
+// 			Length:  protocolLengths[version],
+// 			Run: func(p *p2p.Peer, rw p2p.MsgReadWriter) error {
+// 				peer := NewPeer(version, p, rw, backend.TxPool())
+// 				defer peer.Close()
 
-				return backend.RunPeer(peer, func(peer *Peer) error {
-					return Handle(backend, peer)
-				})
-			},
-			NodeInfo: func() interface{} {
-				return nodeInfo(backend.Chain(), network)
-			},
-			PeerInfo: func(id enode.ID) interface{} {
-				return backend.PeerInfo(id)
-			},
-			Attributes:     []enr.Entry{currentENREntry(backend.Chain())},
-			DialCandidates: dnsdisc,
-		}
-	}
-	return protocols
-}
+// 				return backend.RunPeer(peer, func(peer *Peer) error {
+// 					return Handle(backend, peer)
+// 				})
+// 			},
+// 			NodeInfo: func() interface{} {
+// 				return nodeInfo(backend.Chain(), network)
+// 			},
+// 			PeerInfo: func(id enode.ID) interface{} {
+// 				return backend.PeerInfo(id)
+// 			},
+// 			Attributes:     []enr.Entry{currentENREntry(backend.Chain())},
+// 			DialCandidates: dnsdisc,
+// 		}
+// 	}
+// 	return protocols
+// }
 
 // NodeInfo represents a short summary of the `eth` sub-protocol metadata
 // known about the host peer.
@@ -153,10 +153,10 @@ func nodeInfo(chain *core.BlockChain, network uint64) *NodeInfo {
 // connection is torn down.
 func Handle(backend Backend, peer *Peer) error {
 	for {
-		if err := handleMessage(backend, peer); err != nil {
-			peer.Log().Debug("Message handling failed in `eth`", "err", err)
-			return err
-		}
+		// if err := handleMessage(backend, peer); err != nil {
+		// 	peer.Log().Debug("Message handling failed in `eth`", "err", err)
+		// 	return err
+		// }
 	}
 }
 
@@ -215,39 +215,39 @@ var eth68 = map[uint64]msgHandler{
 
 // handleMessage is invoked whenever an inbound message is received from a remote
 // peer. The remote connection is torn down upon returning any error.
-func handleMessage(backend Backend, peer *Peer) error {
-	// Read the next message from the remote peer, and ensure it's fully consumed
-	msg, err := peer.rw.ReadMsg()
-	if err != nil {
-		return err
-	}
-	if msg.Size > maxMessageSize {
-		return fmt.Errorf("%w: %v > %v", errMsgTooLarge, msg.Size, maxMessageSize)
-	}
-	defer msg.Discard()
+// func handleMessage(backend Backend, peer *Peer) error {
+// 	// Read the next message from the remote peer, and ensure it's fully consumed
+// 	// msg, err := peer.rw.ReadMsg()
+// 	// if err != nil {
+// 	// 	return err
+// 	// }
+// 	// if msg.Size > maxMessageSize {
+// 	// 	return fmt.Errorf("%w: %v > %v", errMsgTooLarge, msg.Size, maxMessageSize)
+// 	// }
+// 	// defer msg.Discard()
 
-	var handlers = eth66
-	if peer.Version() == ETH67 {
-		handlers = eth67
-	}
-	if peer.Version() >= ETH68 {
-		handlers = eth68
-	}
+// 	// var handlers = eth66
+// 	// if peer.Version() == ETH67 {
+// 	// 	handlers = eth67
+// 	// }
+// 	// if peer.Version() >= ETH68 {
+// 	// 	handlers = eth68
+// 	// }
 
-	// Track the amount of time it takes to serve the request and run the handler
-	if metrics.Enabled {
-		h := fmt.Sprintf("%s/%s/%d/%#02x", p2p.HandleHistName, ProtocolName, peer.Version(), msg.Code)
-		defer func(start time.Time) {
-			sampler := func() metrics.Sample {
-				return metrics.ResettingSample(
-					metrics.NewExpDecaySample(1028, 0.015),
-				)
-			}
-			metrics.GetOrRegisterHistogramLazy(h, nil, sampler).Update(time.Since(start).Microseconds())
-		}(time.Now())
-	}
-	if handler := handlers[msg.Code]; handler != nil {
-		return handler(backend, msg, peer)
-	}
-	return fmt.Errorf("%w: %v", errInvalidMsgCode, msg.Code)
-}
+// 	// Track the amount of time it takes to serve the request and run the handler
+// 	if metrics.Enabled {
+// 		// h := fmt.Sprintf("%s/%s/%d/%#02x", p2p.HandleHistName, ProtocolName, peer.Version(), msg.Code)
+// 		// defer func(start time.Time) {
+// 		// 	sampler := func() metrics.Sample {
+// 		// 		return metrics.ResettingSample(
+// 		// 			metrics.NewExpDecaySample(1028, 0.015),
+// 		// 		)
+// 		// 	}
+// 		// 	metrics.GetOrRegisterHistogramLazy(h, nil, sampler).Update(time.Since(start).Microseconds())
+// 		// }(time.Now())
+// 	}
+// 	// if handler := handlers[msg.Code]; handler != nil {
+// 	// 	return handler(backend, msg, peer)
+// 	// }
+// 	// return fmt.Errorf("%w: %v", errInvalidMsgCode, msg.Code)
+// }

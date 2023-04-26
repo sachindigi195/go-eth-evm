@@ -24,7 +24,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/eth"
 	"github.com/sachindigi195/go-eth-evm/eth/downloader"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/node"
+	// "github.com/sachindigi195/go-eth-evm/node"
 )
 
 // FullSyncTester is an auxiliary service that allows Geth to perform full sync

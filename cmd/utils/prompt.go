@@ -20,7 +20,7 @@ package utils
 import (
 	"fmt"
 
-	"github.com/sachindigi195/go-eth-evm/console/prompt"
+	// "github.com/sachindigi195/go-eth-evm/console/prompt"
 )
 
 // GetPassPhrase displays the given text(prompt) to the user and requests some textual

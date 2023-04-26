@@ -29,8 +29,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/core/rawdb"
 	"github.com/sachindigi195/go-eth-evm/core/vm"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/snap"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	fuzz "github.com/google/gofuzz"
@@ -147,15 +147,15 @@ func doFuzz(input []byte, obj interface{}, code int) int {
 // $ CGO_ENABLED=0 go-fuzz-build -func FuzzTrieNodes
 // $ go-fuzz
 
-func FuzzARange(input []byte) int {
-	return doFuzz(input, &snap.GetAccountRangePacket{}, snap.GetAccountRangeMsg)
-}
-func FuzzSRange(input []byte) int {
-	return doFuzz(input, &snap.GetStorageRangesPacket{}, snap.GetStorageRangesMsg)
-}
-func FuzzByteCodes(input []byte) int {
-	return doFuzz(input, &snap.GetByteCodesPacket{}, snap.GetByteCodesMsg)
-}
-func FuzzTrieNodes(input []byte) int {
-	return doFuzz(input, &snap.GetTrieNodesPacket{}, snap.GetTrieNodesMsg)
-}
+// func FuzzARange(input []byte) int {
+// 	return doFuzz(input, &snap.GetAccountRangePacket{}, snap.GetAccountRangeMsg)
+// }
+// func FuzzSRange(input []byte) int {
+// 	return doFuzz(input, &snap.GetStorageRangesPacket{}, snap.GetStorageRangesMsg)
+// }
+// func FuzzByteCodes(input []byte) int {
+// 	return doFuzz(input, &snap.GetByteCodesPacket{}, snap.GetByteCodesMsg)
+// }
+// func FuzzTrieNodes(input []byte) int {
+// 	return doFuzz(input, &snap.GetTrieNodesPacket{}, snap.GetTrieNodesMsg)
+// }

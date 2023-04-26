@@ -17,10 +17,10 @@
 package snap
 
 import (
-	"time"
+	// "time"
 
-	"github.com/sachindigi195/go-eth-evm/p2p/tracker"
+	// "github.com/sachindigi195/go-eth-evm/p2p/tracker"
 )
 
 // requestTracker is a singleton tracker for request times.
-var requestTracker = tracker.New(ProtocolName, time.Minute)
+// var requestTracker = tracker.New(ProtocolName, time.Minute)

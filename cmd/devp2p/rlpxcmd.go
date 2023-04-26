@@ -22,8 +22,8 @@ import (
 
 	"github.com/sachindigi195/go-eth-evm/cmd/devp2p/internal/ethtest"
 	"github.com/sachindigi195/go-eth-evm/crypto"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/rlpx"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/rlpx"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	"github.com/urfave/cli/v2"
 )

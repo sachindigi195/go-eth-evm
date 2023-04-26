@@ -27,7 +27,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 	"github.com/sachindigi195/go-eth-evm/rpc"
 )
 

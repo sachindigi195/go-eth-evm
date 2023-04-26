@@ -38,7 +38,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/internal/flags"
 	"github.com/sachindigi195/go-eth-evm/log"
 	"github.com/sachindigi195/go-eth-evm/metrics"
-	"github.com/sachindigi195/go-eth-evm/node"
+	//"github.com/sachindigi195/go-eth-evm/node"
 	"github.com/sachindigi195/go-eth-evm/trie"
 	"github.com/urfave/cli/v2"
 )

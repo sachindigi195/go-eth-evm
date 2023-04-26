@@ -29,8 +29,8 @@ import (
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/eth"
 	"github.com/sachindigi195/go-eth-evm/internal/utesting"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/rlpx"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/rlpx"
 )
 
 var (

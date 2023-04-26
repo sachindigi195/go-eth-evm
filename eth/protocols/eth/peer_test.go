@@ -24,8 +24,8 @@ import (
 	"testing"
 
 	"github.com/sachindigi195/go-eth-evm/common"
-	"github.com/sachindigi195/go-eth-evm/p2p"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 // testPeer is a simulated peer to allow testing direct network calls.

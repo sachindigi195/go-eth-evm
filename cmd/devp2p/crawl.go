@@ -22,7 +22,7 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
 )
 
 type crawler struct {

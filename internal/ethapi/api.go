@@ -42,7 +42,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/eth/tracers/logger"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 	"github.com/sachindigi195/go-eth-evm/params"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	"github.com/sachindigi195/go-eth-evm/rpc"
@@ -2050,14 +2050,14 @@ func (api *DebugAPI) SetHead(number hexutil.Uint64) {
 
 // NetAPI offers network related RPC methods
 type NetAPI struct {
-	net            *p2p.Server
+	// net            *p2p.Server
 	networkVersion uint64
 }
 
 // NewNetAPI creates a new net API instance.
-func NewNetAPI(net *p2p.Server, networkVersion uint64) *NetAPI {
-	return &NetAPI{net, networkVersion}
-}
+// func NewNetAPI(net *p2p.Server, networkVersion uint64) *NetAPI {
+// 	return &NetAPI{net, networkVersion}
+// }
 
 // Listening returns an indication if the node is listening for network connections.
 func (s *NetAPI) Listening() bool {
@@ -2065,9 +2065,9 @@ func (s *NetAPI) Listening() bool {
 }
 
 // PeerCount returns the number of connected peers
-func (s *NetAPI) PeerCount() hexutil.Uint {
-	return hexutil.Uint(s.net.PeerCount())
-}
+// func (s *NetAPI) PeerCount() hexutil.Uint {
+// 	return hexutil.Uint(s.net.PeerCount())
+// }
 
 // Version returns the current ethereum protocol version.
 func (s *NetAPI) Version() string {

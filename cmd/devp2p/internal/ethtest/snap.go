@@ -27,7 +27,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/eth/protocols/snap"
 	"github.com/sachindigi195/go-eth-evm/internal/utesting"
-	"github.com/sachindigi195/go-eth-evm/light"
+	// "github.com/sachindigi195/go-eth-evm/light"
 	"github.com/sachindigi195/go-eth-evm/trie"
 	"golang.org/x/crypto/sha3"
 )

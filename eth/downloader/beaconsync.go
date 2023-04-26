@@ -90,7 +90,7 @@ func (b *beaconBackfiller) resume() {
 	b.filling = true
 	b.filled = nil
 	b.started = make(chan struct{})
-	mode := b.syncMode
+	// mode := b.syncMode
 	b.lock.Unlock()
 
 	// Start the backfilling on its own thread since the downloader does not have
@@ -105,10 +105,10 @@ func (b *beaconBackfiller) resume() {
 		}()
 		// If the downloader fails, report an error as in beacon chain mode there
 		// should be no errors as long as the chain we're syncing to is valid.
-		if err := b.downloader.synchronise("", common.Hash{}, nil, nil, mode, true, b.started); err != nil {
-			log.Error("Beacon backfilling failed", "err", err)
-			return
-		}
+		// if err := b.downloader.synchronise("", common.Hash{}, nil, nil, mode, true, b.started); err != nil {
+		// 	log.Error("Beacon backfilling failed", "err", err)
+		// 	return
+		// }
 		// Synchronization succeeded. Since this happens async, notify the outer
 		// context to disable snap syncing and enable transaction propagation.
 		if b.success != nil {

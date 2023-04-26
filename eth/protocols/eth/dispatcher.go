@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm/p2p"
+	// "github.com/sachindigi195/go-eth-evm/p2p"
 )
 
 var (
@@ -194,13 +194,13 @@ func (p *Peer) dispatcher() {
 			req := reqOp.req
 			req.Sent = time.Now()
 
-			requestTracker.Track(p.id, p.version, req.code, req.want, req.id)
-			err := p2p.Send(p.rw, req.code, req.data)
-			reqOp.fail <- err
+			// requestTracker.Track(p.id, p.version, req.code, req.want, req.id)
+			// err := p2p.Send(p.rw, req.code, req.data)
+			// reqOp.fail <- err
 
-			if err == nil {
-				pending[req.id] = req
-			}
+			// if err == nil {
+			// 	pending[req.id] = req
+			// }
 
 		case cancelOp := <-p.reqCancel:
 			// Retrieve the pending request to cancel and short circuit if it
@@ -219,7 +219,7 @@ func (p *Peer) dispatcher() {
 			res.Req = pending[res.id]
 
 			// Independent if the request exists or not, track this packet
-			requestTracker.Fulfil(p.id, p.version, res.code, res.id)
+			// requestTracker.Fulfil(p.id, p.version, res.code, res.id)
 
 			switch {
 			case res.Req == nil:

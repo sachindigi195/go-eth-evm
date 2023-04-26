@@ -24,7 +24,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sachindigi195/go-eth-evm"
+	"github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts"
 	"github.com/sachindigi195/go-eth-evm/common"
 	"github.com/sachindigi195/go-eth-evm/common/hexutil"

@@ -25,7 +25,7 @@ import (
 
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/internal/utesting"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover/v4wire"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover/v4wire"
 )
 
 const (

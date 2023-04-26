@@ -32,7 +32,7 @@ import (
 	"github.com/sachindigi195/go-eth-evm/core/types"
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/ethdb"
-	"github.com/sachindigi195/go-eth-evm/light"
+	// "github.com/sachindigi195/go-eth-evm/light"
 	"github.com/sachindigi195/go-eth-evm/log"
 	"github.com/sachindigi195/go-eth-evm/rlp"
 	"github.com/sachindigi195/go-eth-evm/trie"

@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sachindigi195/go-eth-evm"
+	"github.com/ethereum/go-ethereum"
 	"github.com/sachindigi195/go-eth-evm/accounts/abi"
 	"github.com/sachindigi195/go-eth-evm/accounts/abi/bind"
 	"github.com/sachindigi195/go-eth-evm/common"

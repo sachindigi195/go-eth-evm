@@ -42,9 +42,9 @@ func (q *headerQueue) pending() int {
 
 // capacity is responsible for calculating how many headers a particular peer is
 // estimated to be able to retrieve within the allotted round trip time.
-func (q *headerQueue) capacity(peer *peerConnection, rtt time.Duration) int {
-	return peer.HeaderCapacity(rtt)
-}
+// func (q *headerQueue) capacity(peer *peerConnection, rtt time.Duration) int {
+// 	return peer.HeaderCapacity(rtt)
+// }
 
 // updateCapacity is responsible for updating how many headers a particular peer
 // is estimated to be able to retrieve in a unit time.

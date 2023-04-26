@@ -25,18 +25,18 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/common"
-	"github.com/sachindigi195/go-eth-evm/consensus"
-	"github.com/sachindigi195/go-eth-evm/consensus/beacon"
-	"github.com/sachindigi195/go-eth-evm/consensus/clique"
+	// "github.com/sachindigi195/go-eth-evm/consensus"
+	// "github.com/sachindigi195/go-eth-evm/consensus/beacon"
+	// "github.com/sachindigi195/go-eth-evm/consensus/clique"
 	"github.com/sachindigi195/go-eth-evm/consensus/ethash"
 	"github.com/sachindigi195/go-eth-evm/core"
 	"github.com/sachindigi195/go-eth-evm/core/txpool"
 	"github.com/sachindigi195/go-eth-evm/eth/downloader"
 	"github.com/sachindigi195/go-eth-evm/eth/gasprice"
-	"github.com/sachindigi195/go-eth-evm/ethdb"
-	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/miner"
-	"github.com/sachindigi195/go-eth-evm/node"
+	// "github.com/sachindigi195/go-eth-evm/ethdb"
+	// "github.com/sachindigi195/go-eth-evm/log"
+	// "github.com/sachindigi195/go-eth-evm/miner"
+	// "github.com/sachindigi195/go-eth-evm/node"
 	"github.com/sachindigi195/go-eth-evm/params"
 )
 
@@ -84,7 +84,7 @@ var Defaults = Config{
 	TrieTimeout:             60 * time.Minute,
 	SnapshotCache:           102,
 	FilterLogCacheSize:      32,
-	Miner:                   miner.DefaultConfig,
+	// Miner:                   miner.DefaultConfig,
 	TxPool:                  txpool.DefaultConfig,
 	RPCGasCap:               50000000,
 	RPCEVMTimeout:           5 * time.Second,
@@ -172,7 +172,7 @@ type Config struct {
 	FilterLogCacheSize int
 
 	// Mining options
-	Miner miner.Config
+	// Miner miner.Config
 
 	// Ethash options
 	Ethash ethash.Config
@@ -210,33 +210,33 @@ type Config struct {
 }
 
 // CreateConsensusEngine creates a consensus engine for the given chain configuration.
-func CreateConsensusEngine(stack *node.Node, ethashConfig *ethash.Config, cliqueConfig *params.CliqueConfig, notify []string, noverify bool, db ethdb.Database) consensus.Engine {
-	// If proof-of-authority is requested, set it up
-	var engine consensus.Engine
-	if cliqueConfig != nil {
-		engine = clique.New(cliqueConfig, db)
-	} else {
-		switch ethashConfig.PowMode {
-		case ethash.ModeFake:
-			log.Warn("Ethash used in fake mode")
-		case ethash.ModeTest:
-			log.Warn("Ethash used in test mode")
-		case ethash.ModeShared:
-			log.Warn("Ethash used in shared mode")
-		}
-		engine = ethash.New(ethash.Config{
-			PowMode:          ethashConfig.PowMode,
-			CacheDir:         stack.ResolvePath(ethashConfig.CacheDir),
-			CachesInMem:      ethashConfig.CachesInMem,
-			CachesOnDisk:     ethashConfig.CachesOnDisk,
-			CachesLockMmap:   ethashConfig.CachesLockMmap,
-			DatasetDir:       ethashConfig.DatasetDir,
-			DatasetsInMem:    ethashConfig.DatasetsInMem,
-			DatasetsOnDisk:   ethashConfig.DatasetsOnDisk,
-			DatasetsLockMmap: ethashConfig.DatasetsLockMmap,
-			NotifyFull:       ethashConfig.NotifyFull,
-		}, notify, noverify)
-		engine.(*ethash.Ethash).SetThreads(-1) // Disable CPU mining
-	}
-	return beacon.New(engine)
-}
+// func CreateConsensusEngine(stack *node.Node, ethashConfig *ethash.Config, cliqueConfig *params.CliqueConfig, notify []string, noverify bool, db ethdb.Database) consensus.Engine {
+// 	// If proof-of-authority is requested, set it up
+// 	var engine consensus.Engine
+// 	if cliqueConfig != nil {
+// 		engine = clique.New(cliqueConfig, db)
+// 	} else {
+// 		switch ethashConfig.PowMode {
+// 		case ethash.ModeFake:
+// 			log.Warn("Ethash used in fake mode")
+// 		case ethash.ModeTest:
+// 			log.Warn("Ethash used in test mode")
+// 		case ethash.ModeShared:
+// 			log.Warn("Ethash used in shared mode")
+// 		}
+// 		engine = ethash.New(ethash.Config{
+// 			PowMode:          ethashConfig.PowMode,
+// 			CacheDir:         stack.ResolvePath(ethashConfig.CacheDir),
+// 			CachesInMem:      ethashConfig.CachesInMem,
+// 			CachesOnDisk:     ethashConfig.CachesOnDisk,
+// 			CachesLockMmap:   ethashConfig.CachesLockMmap,
+// 			DatasetDir:       ethashConfig.DatasetDir,
+// 			DatasetsInMem:    ethashConfig.DatasetsInMem,
+// 			DatasetsOnDisk:   ethashConfig.DatasetsOnDisk,
+// 			DatasetsLockMmap: ethashConfig.DatasetsLockMmap,
+// 			NotifyFull:       ethashConfig.NotifyFull,
+// 		}, notify, noverify)
+// 		engine.(*ethash.Ethash).SetThreads(-1) // Disable CPU mining
+// 	}
+// 	return beacon.New(engine)
+// }

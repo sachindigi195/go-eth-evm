@@ -31,7 +31,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/route53"
 	"github.com/aws/aws-sdk-go-v2/service/route53/types"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
+	// "github.com/sachindigi195/go-eth-evm/p2p/dnsdisc"
 	"github.com/urfave/cli/v2"
 )
 
