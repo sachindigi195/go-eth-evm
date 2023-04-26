@@ -156,7 +156,7 @@ func configureOptions(customizeFn func(*opt.Options)) *opt.Options {
 	// Set default options
 	options := &opt.Options{
 		Filter:                 filter.NewBloomFilter(10),
-		DisableSeeksCompaction: true,
+		// DisableSeeksCompaction: true,
 	}
 	// Allow caller to make custom modifications to the options
 	if customizeFn != nil {
@@ -219,7 +219,7 @@ func (db *Database) NewBatch() ethdb.Batch {
 func (db *Database) NewBatchWithSize(size int) ethdb.Batch {
 	return &batch{
 		db: db.db,
-		b:  leveldb.MakeBatch(size),
+		// b:  leveldb.MakeBatch(size),
 	}
 }
 

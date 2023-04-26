@@ -227,12 +227,12 @@ func init() {
 }
 
 func main() {
-	// if err := app.Run(os.Args); err != nil {
-	// 	code := 1
-	// 	if ec, ok := err.(*t8ntool.NumberedError); ok {
-	// 		code = ec.ExitCode()
-	// 	}
-	// 	fmt.Fprintln(os.Stderr, err)
-	// 	os.Exit(code)
-	// }
+	if err := app.Run(os.Args); err != nil {
+		code := 1
+		if ec, ok := err.(*t8ntool.NumberedError); ok {
+			code = ec.ExitCode()
+		}
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(code)
+	}
 }

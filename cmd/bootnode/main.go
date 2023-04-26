@@ -27,10 +27,10 @@ import (
 	"github.com/sachindigi195/go-eth-evm/cmd/utils"
 	"github.com/sachindigi195/go-eth-evm/crypto"
 	"github.com/sachindigi195/go-eth-evm/log"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
-	"github.com/sachindigi195/go-eth-evm/p2p/nat"
-	"github.com/sachindigi195/go-eth-evm/p2p/netutil"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/nat"
+	// "github.com/sachindigi195/go-eth-evm/p2p/netutil"
 )
 
 func main() {

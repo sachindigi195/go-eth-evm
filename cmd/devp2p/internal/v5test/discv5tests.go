@@ -23,9 +23,9 @@ import (
 	"time"
 
 	"github.com/sachindigi195/go-eth-evm/internal/utesting"
-	"github.com/sachindigi195/go-eth-evm/p2p/discover/v5wire"
-	"github.com/sachindigi195/go-eth-evm/p2p/enode"
-	"github.com/sachindigi195/go-eth-evm/p2p/netutil"
+	// "github.com/sachindigi195/go-eth-evm/p2p/discover/v5wire"
+	// "github.com/sachindigi195/go-eth-evm/p2p/enode"
+	// "github.com/sachindigi195/go-eth-evm/p2p/netutil"
 )
 
 // Suite is the discv5 test suite.
